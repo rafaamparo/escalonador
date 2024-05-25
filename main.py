@@ -5,10 +5,10 @@ from classes.process import Process
 
 
 unidade_de_tempo = 0
-clock_delay = 2
+clock_delay = 0.5
 quantum = 3
 numero_de_cpus = 4
-numero_de_processos = 1
+id_inicial_de_processos = 1
 fila_de_processos = []
 lista_de_cpus = []
 fila_de_novos = []
@@ -20,9 +20,9 @@ fila_de_bloqueados = []
 fila_de_finalizados = []
 
 processo1 = Process(
-    id=numero_de_processos,
+    id=id_inicial_de_processos,
     t_chegada=0,
-    t_execucao_fase_1=4,
+    t_execucao_fase_1=20,
     t_disco=2,
     t_execucao_fase_2=4,
     tamanho=800,
@@ -31,9 +31,9 @@ processo1 = Process(
     fila_de_bloqueados=fila_de_bloqueados,
     fila_de_prontos=fila_de_prontos_0
 )
-numero_de_processos += 1
+id_inicial_de_processos += 1
 processo2 = Process(
-    id=numero_de_processos,
+    id=id_inicial_de_processos,
     t_chegada=0,
     t_execucao_fase_1=3,
     t_disco=6,
@@ -44,9 +44,9 @@ processo2 = Process(
     fila_de_bloqueados=fila_de_bloqueados,
     fila_de_prontos=fila_de_prontos_0
 )
-numero_de_processos += 1
+id_inicial_de_processos += 1
 processo3 = Process(
-    id=numero_de_processos,
+    id=id_inicial_de_processos,
     t_chegada=0,
     t_execucao_fase_1=2,
     t_disco=3,
@@ -57,9 +57,9 @@ processo3 = Process(
     fila_de_bloqueados=fila_de_bloqueados,
     fila_de_prontos=fila_de_prontos_0
 )
-numero_de_processos += 1
+id_inicial_de_processos += 1
 processo4 = Process(
-    id=numero_de_processos,
+    id=id_inicial_de_processos,
     t_chegada=0,
     t_execucao_fase_1=7,
     t_disco=5,
@@ -70,9 +70,9 @@ processo4 = Process(
     fila_de_bloqueados=fila_de_bloqueados,
     fila_de_prontos=fila_de_prontos_0
 )
-numero_de_processos += 1
+id_inicial_de_processos += 1
 processo5 = Process(
-    id=numero_de_processos,
+    id=id_inicial_de_processos,
     t_chegada=0,
     t_execucao_fase_1=6,
     t_disco=4,
@@ -83,9 +83,9 @@ processo5 = Process(
     fila_de_bloqueados=fila_de_bloqueados,
     fila_de_prontos=fila_de_prontos_0
 )
-numero_de_processos += 1
+id_inicial_de_processos += 1
 processo6 = Process(
-    id=numero_de_processos,
+    id=id_inicial_de_processos,
     t_chegada=1,
     t_execucao_fase_1=4,
     t_disco=4,

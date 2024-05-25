@@ -34,6 +34,9 @@ class Cpu():
                 self.processo = None
             elif self.processo.contador_quantum == self.processo.quantum:
                 self.processo.preempcao()
-                self.filas[(self.filaAtual + 1) % (len(self.filas))].append(self.processo)
+                if (self.filaAtual + 1) < len(self.filas):
+                    self.filas[(self.filaAtual + 1) % (len(self.filas))].append(self.processo)
+                else:
+                    self.filas[self.filaAtual].append(self.processo)
                 self.processo = None
         return
