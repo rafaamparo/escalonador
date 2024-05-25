@@ -5,7 +5,7 @@ from classes.process import Process
 
 
 unidade_de_tempo = 0
-clock_delay = 2.5
+clock_delay = 2
 quantum = 3
 numero_de_cpus = 4
 numero_de_processos = 1
@@ -17,6 +17,7 @@ fila_de_prontos_1 = []
 fila_de_prontos_2 = []
 fila_de_prontos_3 = []
 fila_de_bloqueados = []
+fila_de_finalizados = []
 
 processo1 = Process(
     id=numero_de_processos,
@@ -83,15 +84,27 @@ processo5 = Process(
     fila_de_prontos=fila_de_prontos_0
 )
 numero_de_processos += 1
+processo6 = Process(
+    id=numero_de_processos,
+    t_chegada=1,
+    t_execucao_fase_1=4,
+    t_disco=4,
+    t_execucao_fase_2=3,
+    tamanho=6098,
+    qtd_discos=1,
+    quantum=quantum,
+    fila_de_bloqueados=fila_de_bloqueados,
+    fila_de_prontos=fila_de_prontos_0
+)
 
 for i in range(numero_de_cpus):
-    lista_de_cpus.append(Cpu(i, fila_de_prontos_0, fila_de_prontos_1, fila_de_prontos_2, fila_de_prontos_3, fila_de_bloqueados))
+    lista_de_cpus.append(Cpu(i, fila_de_prontos_0, fila_de_prontos_1, fila_de_prontos_2, fila_de_prontos_3, fila_de_bloqueados, fila_de_finalizados=fila_de_finalizados))
 
-fila_de_processos = [processo1, processo2, processo3, processo4, processo5]
+fila_de_processos = [processo1, processo2, processo3, processo4, processo5, processo6]
 
 # Nosso escalonador de processos
-print(processo1)
-while True:
+executando_escalonador = True
+while executando_escalonador:
     print(f"[Tempo: {unidade_de_tempo}]")
 
     # Chegada de processos
@@ -101,12 +114,13 @@ while True:
             print(f"Processo {processo.identificador} foi adicionado na fila de novos")
 
     # Admissão de processos
-    print({processo.identificador for processo in fila_de_novos})
-    for processo in fila_de_novos:
-        # Verificar se o processo pode ser admitido (classe memory)
-        fila_de_novos.remove(processo)
+    fila_de_novos_copy = fila_de_novos.copy() # Copia a fila de novos para evitar problemas de iteração
+    for processo in fila_de_novos_copy:
+        # TO DO: Verificar se o processo pode ser admitido (classe memory)
         fila_de_prontos_0.append(processo)
+        fila_de_novos.remove(processo)
         processo.admitir()
+        print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
 
     # Escalonamento de processos
     if (len(fila_de_prontos_0) > 0):
@@ -116,7 +130,7 @@ while True:
                 fila_de_prontos_0.remove(processo)
                 cpu.escalonar_processo(processo, 0)
                 print(f"Processo {processo.identificador} foi adicionado na CPU {cpu.id}")
-                break
+
     if (len(fila_de_prontos_1) > 0):
         for cpu in lista_de_cpus:
             if cpu.obter_processo() is None and fila_de_prontos_1:
@@ -124,7 +138,7 @@ while True:
                 fila_de_prontos_1.remove(processo)
                 cpu.escalonar_processo(processo, 1)
                 print(f"Processo {processo.identificador} foi adicionado na CPU {cpu.id}")
-                break
+                
     if (len(fila_de_prontos_2) > 0):
         for cpu in lista_de_cpus:
             if cpu.obter_processo() is None and fila_de_prontos_2:
@@ -132,7 +146,7 @@ while True:
                 fila_de_prontos_2.remove(processo)
                 cpu.escalonar_processo(processo, 2)
                 print(f"Processo {processo.identificador} foi adicionado na CPU {cpu.id}")
-                break
+                
     if (len(fila_de_prontos_3) > 0):
         for cpu in lista_de_cpus:
             if cpu.obter_processo() is None and fila_de_prontos_3:
@@ -140,7 +154,7 @@ while True:
                 fila_de_prontos_3.remove(processo)
                 cpu.escalonar_processo(processo, 3)
                 print(f"Processo {processo.identificador} foi adicionado na CPU {cpu.id}")
-                break
+                
 
     # Execução do DMA
     for processo in fila_de_bloqueados:
@@ -169,4 +183,5 @@ while True:
     time.sleep(clock_delay)
     print("-"*10)
 
-
+    if len(fila_de_finalizados) == len(fila_de_processos):
+        executando_escalonador = False
