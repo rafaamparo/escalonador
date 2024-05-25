@@ -74,7 +74,7 @@ class Process:
         self.bloqueado = True
         self.contador_quantum = 0
 
-        print(f"Processo {self.identificador} será bloqueado")
+        # print(f"Processo {self.identificador} será bloqueado")
 
     def desbloquear(self):	
         if (not self.bloqueado):
@@ -95,7 +95,7 @@ class Process:
         self.mudar_estado()
         self.pronto = True
         
-        print(f"Processo {self.identificador} foi interrompido por fatia de tempo")
+        # print(f"Processo {self.identificador} foi interrompido por fatia de tempo")
 
     def finalizar(self):
         if not self.executando:
@@ -107,7 +107,7 @@ class Process:
         self.mudar_estado()
         self.finalizado = True
 
-        print(f"Processo {self.identificador} foi finalizado")
+        # print(f"Processo {self.identificador} foi finalizado")
 
     def suspender(self):
         if self.suspenso_bloqueado or self.suspenso_pronto:

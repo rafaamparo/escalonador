@@ -8,6 +8,7 @@ class Cpu():
         self.fila_3 = fila_3
         self.filaAtual = None
         self.fila_de_finalizados = fila_de_finalizados
+        self.logRemanescente = None
 
         self.filas = [self.fila_0, self.fila_1, self.fila_2, self.fila_3]
         self.fila_bloqueados = fila_bloqueados
@@ -23,14 +24,22 @@ class Cpu():
         self.filaAtual = filaAtual
         return
 
+    def remanescente(self):
+        if self.logRemanescente is not None:
+            print(self.logRemanescente)
+            self.logRemanescente = None
+        return
+
     def executar_processo(self):
         if self.processo is not None:
             self.processo.executar()
             if self.processo.finalizado:
                 self.fila_de_finalizados.append(self.processo)
+                self.logRemanescente = f"Processo {self.processo.identificador} foi finalizado"
                 self.processo = None
             elif self.processo.bloqueado:
                 self.fila_bloqueados.append(self.processo)
+                self.logRemanescente = f"Processo {self.processo.identificador} foi bloqueado"
                 self.processo = None
             elif self.processo.contador_quantum == self.processo.quantum:
                 self.processo.preempcao()
@@ -38,5 +47,6 @@ class Cpu():
                     self.filas[(self.filaAtual + 1) % (len(self.filas))].append(self.processo)
                 else:
                     self.filas[self.filaAtual].append(self.processo)
+                self.logRemanescente = f"Processo {self.processo.identificador} foi interrompido por fatia de tempo"
                 self.processo = None
         return
