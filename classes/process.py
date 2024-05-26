@@ -8,6 +8,7 @@ class Process:
         self.t_execucao_fase_1 = t_execucao_fase_1
         self.t_execucao_fase_2 = t_execucao_fase_2
         self.t_disco = t_disco
+        self.t_total_execucao = t_execucao_fase_1 + t_execucao_fase_2 + t_disco
         self.qtd_discos = qtd_discos
         self.quantum = quantum
 
