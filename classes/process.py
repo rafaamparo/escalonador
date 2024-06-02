@@ -1,7 +1,7 @@
 # crie a classe Process com o tamanho do processo, o tempo de chegada e o tempo de execução
 
 class Process:
-    def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, fila_de_bloqueados, dispatcher, quantum=3):
+    def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, dispatcher, quantum=3):
         self.identificador = id
         self.tamanho = tamanho
         self.t_chegada = t_chegada
@@ -10,9 +10,10 @@ class Process:
         self.t_disco = t_disco
         self.t_total_execucao = t_execucao_fase_1 + t_execucao_fase_2 + t_disco
         self.qtd_discos = qtd_discos
+        self.qtd_disco_alocado = 0
         self.quantum = quantum
 
-        self.fila_de_bloqueados = fila_de_bloqueados
+        self.executou_disco = False
 
         self.contador_quantum = 0
         self.dispatcher = dispatcher
@@ -82,11 +83,9 @@ class Process:
         
         self.mudar_estado()
         self.pronto = True
-        self.fila_de_bloqueados.remove(self)
+        # self.fila_de_bloqueados.remove(self)
         # self.fila_de_prontos.append(self)
-        self.dispatcher.organizar_prontos(self, 0)
-
-        print(f"Processo {self.identificador} foi desbloqueado")
+        # print(f"Processo {self.identificador} foi desbloqueado")
     
     def preempcao(self):
         if not self.executando:
@@ -163,20 +162,17 @@ class Process:
             self.finalizar()
             return
 
+    def incrementar_tempo_bloqueado(self):
+        if self.bloqueado:
+            self.t_bloqueado += 1
+
+
+    def permitir_execucao_disco(self):
+        self.executou_disco = False
+    
+
     def executar_disco(self):
-        status = {
-            'Bloqueado': self.bloqueado,
-            'Finalizado': self.finalizado,
-            'Executando': self.executando,
-            'Pronto': self.pronto,
-            'Suspenso_bloqueado': self.suspenso_bloqueado,
-            'Suspenso_pronto': self.suspenso_pronto
-        }
-
-        actual_status = [key for key, value in status.items() if value == True]
-
-        print(f"Processo {self.identificador} |  Status: {actual_status or 'Novo'}")
-        if self.suspenso_pronto or self.finalizado or self.pronto or self.executando or self.novo:
+        if self.executou_disco or self.suspenso_pronto or self.finalizado or self.pronto or self.executando or self.novo:
             return
     
         if self.bloqueado:
@@ -186,8 +182,9 @@ class Process:
             self.mudar_estado()
             self.suspenso_bloqueado = True
         
-        # self.t_bloqueado += 1
+
         self.tempo_decorrido_disco += 1
+        self.executou_disco = True
         
         print(f"Processo {self.identificador} está sendo executado em disco: {self.tempo_decorrido_disco}/{self.t_disco}")
         

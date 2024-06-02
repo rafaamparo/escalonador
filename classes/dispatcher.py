@@ -13,6 +13,10 @@ class Dispatcher():
             self.fila_temp_prontos.append([])
 
 
+    def remover_bloqueado(self, processo):
+        self.fila_bloqueados.remove(processo)
+
+
     def organizar_bloqueados(self, processo):
         self.fila_temp_bloqueados.append(processo)	
 
@@ -30,6 +34,7 @@ class Dispatcher():
         # print (f"DEBUG - FILA DE BLOQUEADOS_SPN: {[f'Processo {processo.identificador} - {processo.t_total_execucao}' for processo in fila_temp_bloqueados_SPN]}")
         # print("")
         for processo in fila_temp_bloqueados_SPN:
+            # print(f"Processo {processo.identificador} foi bloqueado")
             self.fila_bloqueados.append(processo)
         self.fila_temp_bloqueados = []
 
@@ -38,6 +43,7 @@ class Dispatcher():
     
     def despachar_finalizados(self):
         for processo in self.fila_temp_finalizados:
+            # print(f"Processo {processo.identificador} foi finalizado")
             self.fila_de_finalizados.append(processo)
         self.fila_temp_finalizados = []
 
@@ -62,6 +68,7 @@ class Dispatcher():
 
         for i in range(len(fila_prontos_SPN)):
             for processo in fila_prontos_SPN[i]:
+                # print(f"Processo {processo.identificador} foi interrompido por fatia de tempo")
                 self.filas[i].append(processo)
             self.fila_temp_prontos[i] = []
 

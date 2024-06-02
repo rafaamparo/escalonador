@@ -1,16 +1,11 @@
 class Cpu():
-    def __init__(self,id, fila_0, fila_1, fila_2, fila_3, dispatcher):
+    def __init__(self,id, filas_qtd, dispatcher):
         self.id = id
         self.processo = None
-        self.fila_0 = fila_0
-        self.fila_1 = fila_1
-        self.fila_2 = fila_2
-        self.fila_3 = fila_3
+        self.filas_qtd = filas_qtd
         self.filaAtual = None
         self.dispatcher = dispatcher
         self.logRemanescente = None
-
-        self.filas = [self.fila_0, self.fila_1, self.fila_2, self.fila_3]
         
     def __str__(self):
         return f'CPU {self.id}'
@@ -44,8 +39,8 @@ class Cpu():
                 self.processo = None
             elif self.processo.contador_quantum == self.processo.quantum:
                 self.processo.preempcao()
-                if (self.filaAtual + 1) < len(self.filas):
-                    self.dispatcher.organizar_prontos(self.processo, (self.filaAtual + 1) % (len(self.filas)))
+                if (self.filaAtual + 1) < self.filas_qtd:
+                    self.dispatcher.organizar_prontos(self.processo, (self.filaAtual + 1) % (self.filas_qtd))
                 else:
                     self.dispatcher.organizar_prontos(self.processo, self.filaAtual)
                 self.logRemanescente = f"Processo {self.processo.identificador} foi interrompido por fatia de tempo"
