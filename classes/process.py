@@ -1,7 +1,7 @@
 # crie a classe Process com o tamanho do processo, o tempo de chegada e o tempo de execução
 
 class Process:
-    def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, fila_de_bloqueados, fila_de_prontos, quantum=3):
+    def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, fila_de_bloqueados, dispatcher, quantum=3):
         self.identificador = id
         self.tamanho = tamanho
         self.t_chegada = t_chegada
@@ -13,10 +13,9 @@ class Process:
         self.quantum = quantum
 
         self.fila_de_bloqueados = fila_de_bloqueados
-        self.fila_de_prontos = fila_de_prontos
 
         self.contador_quantum = 0
-
+        self.dispatcher = dispatcher
         self.t_bloqueado = 0
         self.tempo_decorrido_disco = 0
         self.tempo_executado = 0
@@ -84,7 +83,8 @@ class Process:
         self.mudar_estado()
         self.pronto = True
         self.fila_de_bloqueados.remove(self)
-        self.fila_de_prontos.append(self)
+        # self.fila_de_prontos.append(self)
+        self.dispatcher.organizar_prontos(self, 0)
 
         print(f"Processo {self.identificador} foi desbloqueado")
     
@@ -164,7 +164,18 @@ class Process:
             return
 
     def executar_disco(self):
-    
+        status = {
+            'Bloqueado': self.bloqueado,
+            'Finalizado': self.finalizado,
+            'Executando': self.executando,
+            'Pronto': self.pronto,
+            'Suspenso_bloqueado': self.suspenso_bloqueado,
+            'Suspenso_pronto': self.suspenso_pronto
+        }
+
+        actual_status = [key for key, value in status.items() if value == True]
+
+        print(f"Processo {self.identificador} |  Status: {actual_status or 'Novo'}")
         if self.suspenso_pronto or self.finalizado or self.pronto or self.executando or self.novo:
             return
     
@@ -183,4 +194,5 @@ class Process:
         if self.tempo_decorrido_disco == self.t_disco:
             self.desbloquear()
             return
+        
     

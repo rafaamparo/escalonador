@@ -1,5 +1,5 @@
 class Cpu():
-    def __init__(self,id, fila_0, fila_1, fila_2, fila_3, fila_bloqueados, fila_de_finalizados):
+    def __init__(self,id, fila_0, fila_1, fila_2, fila_3, dispatcher):
         self.id = id
         self.processo = None
         self.fila_0 = fila_0
@@ -7,11 +7,10 @@ class Cpu():
         self.fila_2 = fila_2
         self.fila_3 = fila_3
         self.filaAtual = None
-        self.fila_de_finalizados = fila_de_finalizados
+        self.dispatcher = dispatcher
         self.logRemanescente = None
 
         self.filas = [self.fila_0, self.fila_1, self.fila_2, self.fila_3]
-        self.fila_bloqueados = fila_bloqueados
         
     def __str__(self):
         return f'CPU {self.id}'
@@ -34,19 +33,21 @@ class Cpu():
         if self.processo is not None:
             self.processo.executar()
             if self.processo.finalizado:
-                self.fila_de_finalizados.append(self.processo)
+                self.dispatcher.organizar_finalizados(self.processo)
+
                 self.logRemanescente = f"Processo {self.processo.identificador} foi finalizado"
                 self.processo = None
             elif self.processo.bloqueado:
-                self.fila_bloqueados.append(self.processo)
+                self.dispatcher.organizar_bloqueados(self.processo)
+
                 self.logRemanescente = f"Processo {self.processo.identificador} foi bloqueado"
                 self.processo = None
             elif self.processo.contador_quantum == self.processo.quantum:
                 self.processo.preempcao()
                 if (self.filaAtual + 1) < len(self.filas):
-                    self.filas[(self.filaAtual + 1) % (len(self.filas))].append(self.processo)
+                    self.dispatcher.organizar_prontos(self.processo, (self.filaAtual + 1) % (len(self.filas)))
                 else:
-                    self.filas[self.filaAtual].append(self.processo)
+                    self.dispatcher.organizar_prontos(self.processo, self.filaAtual)
                 self.logRemanescente = f"Processo {self.processo.identificador} foi interrompido por fatia de tempo"
                 self.processo = None
         return
