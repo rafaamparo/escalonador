@@ -14,6 +14,7 @@ class Process:
         self.quantum = quantum
 
         self.executou_disco = False
+        self.disco_finalizado = False
 
         self.contador_quantum = 0
         self.dispatcher = dispatcher

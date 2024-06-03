@@ -25,7 +25,7 @@ bloqueados_em_execucao = []
 
 filas = [[] for i in range(numero_de_filas)]
 
-dispatcher = Dispatcher(filas, fila_de_bloqueados, fila_de_finalizados)
+dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados)
 
 processo1 = Process(
     id=id_inicial_de_processos,
@@ -98,12 +98,17 @@ while executando_escalonador:
         "executando": [],
     }
 
-    # ! Printar Logs Remanescentes
+    # ! Printar Logs Remanescentes dos CPUs
     print(" ")
     for cpu in lista_de_cpus:
         cpu.remanescente()
     print(" ")
 
+    # ! Printar Logs Remanescentes dos Discos
+    print(" ")
+    for disco in lista_de_discos:
+        disco.remanescente()
+    print(" ")
 
     # ! Chegada de processos
     for processo in fila_de_processos:
@@ -129,10 +134,6 @@ while executando_escalonador:
                     fila.remove(processo)
                     cpu.escalonar_processo(processo, i)
                     print(f"Processo {processo.identificador} é escalonado para CPU {cpu.id}")
-    
-    # ! Incrementar tempo de bloqueio
-    for processo in fila_de_bloqueados.copy():
-        processo.incrementar_tempo_bloqueado()
 
     # ! Escalonamento de Disco
     for processo in fila_de_bloqueados.copy():
@@ -168,6 +169,17 @@ while executando_escalonador:
         if cpu.obter_processo() is not None:
             dadoDoEscalonamentoAtual["executando"].append(cpu.obter_processo().identificador)
         cpu.executar_processo()
+
+    # ! Incrementar tempo de bloqueio
+    for processo in fila_de_bloqueados.copy():
+        processo.incrementar_tempo_bloqueado()
+
+    # ! Execução do DMA
+    for disco in lista_de_discos:
+        disco.executar()
+        
+    for processo in bloqueados_em_execucao.copy():
+        processo.permitir_execucao_disco()
     
     traceback.dadosDoEscalonamento.append(dadoDoEscalonamentoAtual)
 

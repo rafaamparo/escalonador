@@ -1,8 +1,9 @@
 class Dispatcher():
-    def __init__(self, filas, fila_bloqueados, fila_de_finalizados):
+    def __init__(self, filas, fila_bloqueados, bloqueados_em_execucao, fila_de_finalizados):
         self.filas = filas
         self.fila_bloqueados = fila_bloqueados
         self.fila_de_finalizados = fila_de_finalizados
+        self.bloqueados_em_execucao = bloqueados_em_execucao
 
         self.fila_temp_bloqueados = []
         self.fila_temp_finalizados = []
@@ -14,8 +15,12 @@ class Dispatcher():
 
 
     def remover_bloqueado(self, processo):
-        self.fila_bloqueados.remove(processo)
+        if processo in self.fila_bloqueados:
+            self.fila_bloqueados.remove(processo)
 
+    def remover_bloqueado_em_execucao(self, processo):
+        if processo in self.bloqueados_em_execucao:
+            self.bloqueados_em_execucao.remove(processo)
 
     def organizar_bloqueados(self, processo):
         self.fila_temp_bloqueados.append(processo)	

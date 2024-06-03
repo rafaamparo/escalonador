@@ -26,8 +26,11 @@ class Disk():
         if self.processo is not None:
             self.processo.executar_disco()
             if self.processo.pronto == True:
-                self.logRemanescente = f'Processo {self.processo.id} foi desbloqueado'
-                self.dispatcher.remover_bloqueado(self, self.processo)
-                self.dispatcher.organizar_prontos(self, 0)
+                if (self.processo.disco_finalizado == False):
+                    self.logRemanescente = f'Processo {self.processo.identificador} foi desbloqueado'
+                    self.dispatcher.remover_bloqueado(self.processo)
+                    self.dispatcher.remover_bloqueado_em_execucao(self.processo)
+                    self.dispatcher.organizar_prontos(self.processo, 0)
+                    self.processo.disco_finalizado = True
                 self.processo = None
         return
