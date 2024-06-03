@@ -102,10 +102,8 @@ while executando_escalonador:
     print(" ")
     for cpu in lista_de_cpus:
         cpu.remanescente()
-    print(" ")
 
     # ! Printar Logs Remanescentes dos Discos
-    print(" ")
     for disco in lista_de_discos:
         disco.remanescente()
     print(" ")
