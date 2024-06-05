@@ -1,9 +1,11 @@
-from classes.process import Process
+from process import Process
+from dispatcher import Dispatcher
 
 class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
         # vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
-        self.memoria_principal = [False for _ in range(capacidade_total_mb/capacidade_celula_mb)]
+        self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
+        self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 4000
     
     def admite_processo(self, processo: Process):
         # achar o menor espaço contínuo possível para alocar o processo
@@ -17,6 +19,10 @@ class Memory():
                 if fim_intervalo != inicio_intervalo:
                     intervalos_livres.append([inicio_intervalo, fim_intervalo])
                 inicio_intervalo = i
+                fim_intervalo = i
+        
+        if fim_intervalo != inicio_intervalo:
+            intervalos_livres.append([inicio_intervalo, fim_intervalo])
         
         intervalos_livres = sorted(intervalos_livres, key=lambda x: (x[1] - x[0]))
 
@@ -30,3 +36,27 @@ class Memory():
                 break
         else:
             print(f"O processo {processo.identificador} não pode ser alocado na memória nesse momento")
+
+    def remover_processo(self, processo: Process):
+        pass
+
+
+
+
+def main():
+    memoria = Memory()
+    processo1 = Process(
+        id=1,
+        t_chegada=0,
+        t_execucao_fase_1=4,
+        t_disco=3,
+        t_execucao_fase_2=6,
+        tamanho=800,
+        qtd_discos=2,
+        quantum=3,
+        dispatcher=Dispatcher([], [], [])
+    )
+    memoria.admite_processo(processo1)
+    
+if __name__ == '__main__':
+    main()
