@@ -32,11 +32,15 @@ class Memory():
                 fim_intervalo = inicio_intervalo + processo.tamanho
                 for i in range(inicio_intervalo, fim_intervalo):
                     self.memoria_principal[i] = True
+                processo.indice_inicial_mp = inicio_intervalo
+                processo.indice_final_mp = fim_intervalo
+                processo.admitir()
                 print(f"O processo {processo.identificador} foi alocado na memória entre as posições {inicio_intervalo} e {fim_intervalo}")
-                break
-        else:
-            print(f"O processo {processo.identificador} não pode ser alocado na memória nesse momento")
-
+                return True
+        
+        print(f"O processo {processo.identificador} não pode ser alocado na memória nesse momento")
+        return False
+    
     def remover_processo(self, processo: Process):
         pass
 
