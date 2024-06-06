@@ -1,5 +1,5 @@
-from process import Process
-from dispatcher import Dispatcher
+from classes.process import Process
+from classes.dispatcher import Dispatcher
 
 class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
@@ -42,25 +42,7 @@ class Memory():
         return False
     
     def remover_processo(self, processo: Process):
-        pass
-
-
-
-
-def main():
-    memoria = Memory()
-    processo1 = Process(
-        id=1,
-        t_chegada=0,
-        t_execucao_fase_1=4,
-        t_disco=3,
-        t_execucao_fase_2=6,
-        tamanho=800,
-        qtd_discos=2,
-        quantum=3,
-        dispatcher=Dispatcher([], [], [])
-    )
-    memoria.admite_processo(processo1)
-    
-if __name__ == '__main__':
-    main()
+        for i in range(processo.indice_inicial_mp, processo.indice_final_mp):
+            self.memoria_principal[i] = False
+        processo.suspender()
+        print(f"O processo {processo.identificador} foi removido da memória principal")
