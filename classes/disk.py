@@ -34,3 +34,4 @@ class Disk():
                     self.processo.disco_finalizado = True
                 self.processo = None
         return
+
