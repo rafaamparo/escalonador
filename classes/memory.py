@@ -46,3 +46,10 @@ class Memory():
             self.memoria_principal[i] = False
         processo.suspender()
         print(f"O processo {processo.identificador} foi removido da memória principal")
+        return
+
+    def finalizar_processo(self, processo: Process):
+        for i in range(processo.indice_inicial_mp, processo.indice_final_mp):
+            self.memoria_principal[i] = False
+        print(f"O processo {processo.identificador} foi finalizado e removido da memória principal")
+        return

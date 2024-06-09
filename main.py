@@ -27,7 +27,7 @@ filas = [[] for i in range(numero_de_filas)]
 
 memoria = Memory()
 
-dispatcher = Dispatcher(filas, fila_de_bloqueados, fila_de_finalizados)
+dispatcher = Dispatcher(filas, fila_de_bloqueados, fila_de_finalizados, memoria)
 
 processo1 = Process(
     id=id_inicial_de_processos,

@@ -137,13 +137,13 @@ class Process:
             self.mudar_estado()
             self.bloqueado = True
 
-            print(f"Processo {self.identificador} voltou para a fila de prontos da Memória Principal")
+            print(f"Processo {self.identificador} voltou para a fila de bloqueados da Memória Principal")
 
         else:
             self.mudar_estado()
             self.pronto = True
 
-            print(f"Processo {self.identificador} voltou para a fila de bloqueados da Memória Principal")
+            print(f"Processo {self.identificador} voltou para a fila de prontos da Memória Principal")
 
     def executar(self):
         if self.suspenso_bloqueado or self.suspenso_pronto or self.finalizado or self.bloqueado:

@@ -1,5 +1,5 @@
 class Dispatcher():
-    def __init__(self, filas, fila_bloqueados, fila_de_finalizados):
+    def __init__(self, filas, fila_bloqueados, fila_de_finalizados, memoria):
         self.filas = filas
         self.fila_bloqueados = fila_bloqueados
         self.fila_de_finalizados = fila_de_finalizados
@@ -7,6 +7,7 @@ class Dispatcher():
         self.fila_temp_bloqueados = []
         self.fila_temp_finalizados = []
         self.fila_temp_prontos = []
+        self.memoria = memoria
 
 
         for fila in self.filas:
@@ -43,6 +44,7 @@ class Dispatcher():
     
     def despachar_finalizados(self):
         for processo in self.fila_temp_finalizados:
+            self.memoria.finalizar_processo(processo)
             # print(f"Processo {processo.identificador} foi finalizado")
             self.fila_de_finalizados.append(processo)
         self.fila_temp_finalizados = []
