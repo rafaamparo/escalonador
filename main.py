@@ -5,7 +5,7 @@ from classes.process import Process
 from classes.dispatcher import Dispatcher
 from classes.disk import Disk
 from util.traceback import Traceback
-
+from classes.memory import Memory
 
 unidade_de_tempo = 0
 clock_delay = 0.4
@@ -24,6 +24,8 @@ fila_de_finalizados = []
 bloqueados_em_execucao = []
 
 filas = [[] for i in range(numero_de_filas)]
+
+memoria = Memory()
 
 dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados)
 
@@ -118,10 +120,11 @@ while executando_escalonador:
     fila_de_novos_SPN = sorted(fila_de_novos, key=lambda x: x.t_total_execucao)   # ordena a fila de novos seguindo o escalonamento Shortest Process Next - os menores processos possuem prioridade
     for processo in fila_de_novos_SPN:
         # TO DO: Verificar se o processo pode ser admitido (classe memory)
-        filas[0].append(processo)
-        fila_de_novos.remove(processo)
-        processo.admitir()
-        print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
+        if memoria.admite_processo(processo):
+            filas[0].append(processo)
+            fila_de_novos.remove(processo)
+            #processo.admitir()
+            print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
 
     # ! Escalonamento de processos
     for (i, fila) in enumerate(filas):

@@ -32,6 +32,9 @@ class Process:
 
         self.fila_atual = None
 
+        self.indice_inicial_mp = None
+        self.indice_final_mp = None
+
     def __str__(self):
         status = {
             'Bloqueado': self.bloqueado,
