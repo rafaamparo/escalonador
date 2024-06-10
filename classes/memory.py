@@ -41,6 +41,7 @@ class Memory():
                 return True
         
         print(f"O processo {processo.identificador} não pode ser alocado na memória nesse momento")
+        processo.suspender()
         return False
     
     def remover_processo(self, processo: Process):
