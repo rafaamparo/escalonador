@@ -30,7 +30,7 @@ class Memory():
         for intervalo in intervalos_livres:
             if((intervalo[1] - intervalo[0]) >= processo.tamanho):
                 inicio_intervalo = intervalo[0]
-                fim_intervalo = inicio_intervalo + processo.tamanho - 1
+                fim_intervalo = inicio_intervalo + processo.tamanho
                 for i in range(inicio_intervalo, processo.tamanho + inicio_intervalo + 1):
                     self.memoria_principal[i] = True
                 processo.indice_inicial_mp = inicio_intervalo
