@@ -5,7 +5,7 @@ class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
         # vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
         self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
-        self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 4000
+        # self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 4000
     
     def admite_processo(self, processo: Process):
         # achar o menor espaço contínuo possível para alocar o processo
@@ -26,11 +26,13 @@ class Memory():
         
         intervalos_livres = sorted(intervalos_livres, key=lambda x: (x[1] - x[0]))
 
+        print(f"Intervalos livres: {intervalos_livres}")
         for intervalo in intervalos_livres:
             if((intervalo[1] - intervalo[0]) >= processo.tamanho):
                 inicio_intervalo = intervalo[0]
-                fim_intervalo = inicio_intervalo + processo.tamanho
-                for i in range(inicio_intervalo, fim_intervalo):
+                fim_intervalo = inicio_intervalo + processo.tamanho - 1
+                print(f"Intervalo: {inicio_intervalo} - {fim_intervalo}")
+                for i in range(inicio_intervalo, processo.tamanho + inicio_intervalo + 1):
                     self.memoria_principal[i] = True
                 processo.indice_inicial_mp = inicio_intervalo
                 processo.indice_final_mp = fim_intervalo
