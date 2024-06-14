@@ -34,7 +34,7 @@ class Memory():
                 for i in range(inicio_intervalo, processo.tamanho + inicio_intervalo + 1):
                     self.memoria_principal[i] = True
                 processo.indice_inicial_mp = inicio_intervalo
-                processo.indice_final_mp = fim_intervalo
+                processo.indice_final_mp = processo.tamanho + inicio_intervalo
                 processo.admitir()
                 print(f"O processo {processo.identificador} foi alocado na memória entre as posições {inicio_intervalo} e {fim_intervalo}")
                 return True
@@ -44,14 +44,14 @@ class Memory():
         return False
     
     def remover_processo(self, processo: Process):
-        for i in range(processo.indice_inicial_mp, processo.indice_final_mp):
+        for i in range(processo.indice_inicial_mp, processo.indice_final_mp + 1):
             self.memoria_principal[i] = False
         processo.suspender()
         print(f"O processo {processo.identificador} foi removido da memória principal")
         return
 
     def finalizar_processo(self, processo: Process):
-        for i in range(processo.indice_inicial_mp, processo.indice_final_mp):
+        for i in range(processo.indice_inicial_mp, processo.indice_final_mp + 1):
             self.memoria_principal[i] = False
         print(f"O processo {processo.identificador} foi finalizado e removido da memória principal")
         return
