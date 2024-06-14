@@ -94,6 +94,11 @@ executando_escalonador = True
 while executando_escalonador:
     print(f"[Tempo: {unidade_de_tempo}]")
 
+    dispatcher.despachar_finalizados()
+    dispatcher.despachar_bloqueados()
+    dispatcher.despachar_prontos()
+
+
     # ! Dados do Escalonamento Atual para o Traceback (Gerar Tabela)
     dadoDoEscalonamentoAtual = {
         "tempo": unidade_de_tempo,
@@ -153,6 +158,7 @@ while executando_escalonador:
 
     # ! Printar Status dos Processos
     print(" ")
+    memoria.printIntervalosLivres()
     print(f"Fila de Novos: {[f'Processo {processo.identificador}' for processo in fila_de_novos]}")
     for (i, fila) in enumerate(filas):
         print(f"Fila de Prontos {i}: {[f'Processo {processo.identificador}' for processo in fila]}")
@@ -184,9 +190,6 @@ while executando_escalonador:
     
     traceback.dadosDoEscalonamento.append(dadoDoEscalonamentoAtual)
 
-    dispatcher.despachar_finalizados()
-    dispatcher.despachar_bloqueados()
-    dispatcher.despachar_prontos()
 
     unidade_de_tempo += 1
     time.sleep(clock_delay)

@@ -1,0 +1,3 @@
+# add __pycache__ to .gitignore
+
+__pycache__/

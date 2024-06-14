@@ -66,7 +66,7 @@ class Process:
         self.mudar_estado()
         self.pronto = True
 
-        print(f"Processo {self.identificador} foi admitido na Memória Principal")
+        # print(f"Processo {self.identificador} foi admitido na Memória Principal")
 
     def bloquear(self):
         if not self.executando:
