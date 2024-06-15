@@ -6,6 +6,7 @@ from classes.dispatcher import Dispatcher
 from classes.disk import Disk
 from util.traceback import Traceback
 from classes.memory import Memory
+from classes.leitorArquivo import LeitorArquivo
 
 unidade_de_tempo = 0
 clock_delay = 0.4
@@ -30,53 +31,12 @@ memoria = Memory()
 
 dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados, memoria)
 
-processo1 = Process(
-    id=id_inicial_de_processos,
-    t_chegada=0,
-    t_execucao_fase_1=4,
-    t_disco=3,
-    t_execucao_fase_2=6,
-    tamanho=800,
-    qtd_discos=2,
-    quantum=quantum,
-    dispatcher=dispatcher
-)
-id_inicial_de_processos += 1
-processo2 = Process(
-    id=id_inicial_de_processos,
-    t_chegada=1,
-    t_execucao_fase_1=1,
-    t_disco=3,
-    t_execucao_fase_2=1,
-    tamanho=950,
-    qtd_discos=1,
-    quantum=quantum,
-    dispatcher=dispatcher
-)
-id_inicial_de_processos += 1
-processo3 = Process(
-    id=id_inicial_de_processos,
-    t_chegada=2,
-    t_execucao_fase_1=5,
-    t_disco=3,
-    t_execucao_fase_2=7,
-    tamanho=1024,
-    qtd_discos=1,
-    quantum=quantum,
-    dispatcher=dispatcher
-)
-id_inicial_de_processos += 1
-processo4 = Process(
-    id=id_inicial_de_processos,
-    t_chegada=3,
-    t_execucao_fase_1=2,
-    t_disco=2,
-    t_execucao_fase_2=3,
-    tamanho=2048,
-    qtd_discos=2,
-    quantum=quantum,
-    dispatcher=dispatcher
-)
+caminho_arquivo = r'C:\Users\Anderson\Documents\MeusProjetos\escalonador\entrada.txt'
+leitor = LeitorArquivo(caminho_arquivo, dispatcher)
+processos = leitor.carregar_processos()
+
+for processo in processos:
+    processo.quantum = quantum
 
 for i in range(numero_de_cpus):
     lista_de_cpus.append(Cpu(i, len(filas), dispatcher=dispatcher))
@@ -84,8 +44,7 @@ for i in range(numero_de_cpus):
 for i in range(numero_de_discos):
     lista_de_discos.append(Disk(i, dispatcher=dispatcher))
     
-
-fila_de_processos = [processo1, processo2, processo3, processo4]
+fila_de_processos = processos
 
 traceback = Traceback(fila_de_processos=fila_de_processos) #Para gerar tabela de escalonamento ao fim da execução
 
