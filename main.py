@@ -24,7 +24,7 @@ fila_de_bloqueados = []
 fila_de_finalizados = []
 bloqueados_em_execucao = []
 fila_de_suspensos = []
-
+lista_finalizados = []
 filas = [[] for i in range(numero_de_filas)]
 
 memoria = Memory()
@@ -51,6 +51,8 @@ executando_escalonador = True
 while executando_escalonador:
     print(f"[Tempo: {unidade_de_tempo}]")
 
+    for processo_finalizado in dispatcher.fila_temp_finalizados:
+        lista_finalizados.append({"processo": processo_finalizado.identificador, "tempo": unidade_de_tempo})
     
     dispatcher.despachar_finalizados()
     dispatcher.despachar_bloqueados()
