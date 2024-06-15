@@ -22,6 +22,7 @@ fila_de_novos = []
 fila_de_bloqueados = []
 fila_de_finalizados = []
 bloqueados_em_execucao = []
+fila_de_suspensos = []
 
 filas = [[] for i in range(numero_de_filas)]
 
@@ -94,10 +95,10 @@ executando_escalonador = True
 while executando_escalonador:
     print(f"[Tempo: {unidade_de_tempo}]")
 
+    
     dispatcher.despachar_finalizados()
     dispatcher.despachar_bloqueados()
     dispatcher.despachar_prontos()
-
 
     # ! Dados do Escalonamento Atual para o Traceback (Gerar Tabela)
     dadoDoEscalonamentoAtual = {
@@ -121,6 +122,21 @@ while executando_escalonador:
             fila_de_novos.append(processo) # Adiciona o processo na fila de novos
             print(f"Processo {processo.identificador} foi adicionado na fila de novos")
 
+
+    # ! Volta de processos suspensos à MP
+    for processo in fila_de_suspensos.copy():
+        if memoria.admite_processo(processo, False):
+            fila_de_suspensos.remove(processo)
+            processo.voltar_para_mp()
+
+            if (processo.pronto):
+                filas[0].append(processo)
+                print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
+            if (processo.bloqueado):
+                fila_de_bloqueados.append(processo)
+                print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
+
+
     #!  Admissão de processos
     fila_de_novos_SPN = sorted(fila_de_novos, key=lambda x: x.t_total_execucao)   # ordena a fila de novos seguindo o escalonamento Shortest Process Next - os menores processos possuem prioridade
     for processo in fila_de_novos_SPN:
@@ -130,6 +146,12 @@ while executando_escalonador:
             fila_de_novos.remove(processo)
             #processo.admitir()
             print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
+        else:
+            # tentar suspender um processo bloqueado para liberar espaço necessário na MP
+            fila_de_novos.remove(processo)
+            processo.admitir()
+            processo.suspender()
+            fila_de_suspensos.append(processo)
 
     # ! Escalonamento de processos
     for (i, fila) in enumerate(filas):
@@ -163,6 +185,8 @@ while executando_escalonador:
     for (i, fila) in enumerate(filas):
         print(f"Fila de Prontos {i}: {[f'Processo {processo.identificador}' for processo in fila]}")
     print(f"Fila de Bloqueados: {[f'Processo {processo.identificador} ({processo.qtd_discos} discos)' for processo in fila_de_bloqueados]}")
+    print(f"Fila de Suspensos-Prontos: {[f'Processo {processo.identificador}' for processo in fila_de_suspensos if processo.suspenso_pronto]}")
+    print(f"Fila de Suspensos-Bloqueados: {[f'Processo {processo.identificador}' for processo in fila_de_suspensos if processo.suspenso_bloqueado]}")
     for cpu in lista_de_cpus:
         print(f"CPU {cpu.id}: {(f'Processo {cpu.obter_processo().identificador}' if cpu.obter_processo() is not None else None) or 'Livre'}")
     for disco in lista_de_discos:

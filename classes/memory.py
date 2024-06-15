@@ -15,7 +15,7 @@ class Memory():
         print(f"Intervalos livres: {self.intervalos_livres}")
 
 
-    def admite_processo(self, processo: Process):
+    def admite_processo(self, processo: Process, printarLogs=True):
         # política best fit: achar o menor espaço contínuo possível para alocar o processo
         self.atualiza_intervalos_livres()
 
@@ -35,7 +35,8 @@ class Memory():
                 processo.admitir()
                 print(f"Processo {processo.identificador} foi alocado na Memória Principal no intervalo [{inicio_intervalo}, {fim_intervalo}]")
                 return True
-        print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento")
+        if printarLogs:
+            print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento")
         #processo.suspender()
         return False
     

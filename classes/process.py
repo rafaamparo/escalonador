@@ -82,11 +82,16 @@ class Process:
         # print(f"Processo {self.identificador} será bloqueado")
 
     def desbloquear(self):	
-        if (not self.bloqueado):
+        if (not self.bloqueado and not self.suspenso_bloqueado):
             return
         
-        self.mudar_estado()
-        self.pronto = True
+        if (self.bloqueado):
+            self.mudar_estado()
+            self.pronto = True
+
+        if (self.suspenso_bloqueado):
+            self.mudar_estado()
+            self.suspenso_pronto = True
         # self.fila_de_bloqueados.remove(self)
         # self.fila_de_prontos.append(self)
         # print(f"Processo {self.identificador} foi desbloqueado")
@@ -123,12 +128,12 @@ class Process:
         if self.bloqueado:
             self.mudar_estado()
             self.suspenso_bloqueado = True
-            print(f"Processo {self.identificador} foi suspenso-bloqueado")
+            print(f"Processo {self.identificador} foi Suspenso")
 
         else:
             self.mudar_estado()
             self.suspenso_pronto = True
-            print(f"Processo {self.identificador} foi suspenso-pronto")
+            print(f"Processo {self.identificador} foi Suspenso")
 
     def voltar_para_mp(self):
         if (not self.suspenso_bloqueado) and (not self.suspenso_pronto):
@@ -167,7 +172,7 @@ class Process:
             return
 
     def incrementar_tempo_bloqueado(self):
-        if self.bloqueado:
+        if self.bloqueado or self.suspenso_bloqueado:
             self.t_bloqueado += 1
 
 
