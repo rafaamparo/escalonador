@@ -6,7 +6,7 @@ class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
         # vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
         self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
-        # self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 4000
+        self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 4000
         self.intervalos_livres = []
         self.atualiza_intervalos_livres()
     
