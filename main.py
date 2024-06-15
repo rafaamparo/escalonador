@@ -32,11 +32,8 @@ memoria = Memory()
 dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados, memoria)
 
 caminho_arquivo = r'C:\Users\Anderson\Documents\MeusProjetos\escalonador\entrada.txt'
-leitor = LeitorArquivo(caminho_arquivo, dispatcher)
+leitor = LeitorArquivo(caminho_arquivo, dispatcher, quantum)
 processos = leitor.carregar_processos()
-
-for processo in processos:
-    processo.quantum = quantum
 
 for i in range(numero_de_cpus):
     lista_de_cpus.append(Cpu(i, len(filas), dispatcher=dispatcher))
@@ -47,7 +44,6 @@ for i in range(numero_de_discos):
 fila_de_processos = processos
 
 traceback = Traceback(fila_de_processos=fila_de_processos) #Para gerar tabela de escalonamento ao fim da execução
-
 
 # Nosso escalonador de processos
 executando_escalonador = True

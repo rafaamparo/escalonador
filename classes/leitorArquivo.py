@@ -2,10 +2,11 @@ from classes.process import Process
 from classes.dispatcher import Dispatcher
 
 class LeitorArquivo:
-    def __init__(self, caminho_arquivo, dispatcher, id_inicial = 1):
+    def __init__(self, caminho_arquivo, dispatcher, quantum, id_inicial = 1):
         self.caminho_arquivo = caminho_arquivo
         self.id_inicial = id_inicial
-        self.dispatcher = dispatcher 
+        self.dispatcher = dispatcher
+        self.quantum = quantum
     
     def carregar_processos(self):
         processos = []
@@ -27,7 +28,8 @@ class LeitorArquivo:
                     t_execucao_fase_2 = t_execucao_fase_2, 
                     tamanho = tamanho, 
                     qtd_discos = qtd_discos,
-                    dispatcher = self.dispatcher
+                    dispatcher = self.dispatcher,
+                    quantum = self.quantum
                     )
                 processos.append(processo)
                 self.id_inicial += 1
