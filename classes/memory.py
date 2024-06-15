@@ -52,7 +52,7 @@ class Memory():
                 for i in range(inicio_intervalo, fim_intervalo + 1):
                     self.memoria_principal[i] = True
                 processo.indice_inicial_mp = inicio_intervalo
-                processo.indice_final_mp = processo.tamanho + inicio_intervalo
+                processo.indice_final_mp = processo.tamanho + inicio_intervalo - 1
                 processo.admitir()
                 print(f"Processo {processo.identificador} foi alocado na Memória Principal no intervalo [{inicio_intervalo}, {fim_intervalo}]")
                 
@@ -136,9 +136,13 @@ class Memory():
             else:
                 # se o intervalo livre e o processo removido eram imediatamente adjacentes
                 if intervalo.inicio == (indice_final + 1):
-                    ant.fim = intervalo.fim
-                    ant.prox = intervalo.prox
-                    intervalo = None
+                    if ant.fim + 1 == indice_inicial: # existia um outro intervalo livre imetiatamente antes do processo
+                        ant.fim = intervalo.fim
+                        ant.prox = intervalo.prox
+                        intervalo = None
+                    else:
+                        intervalo.inicio = indice_inicial
+
                 # existe algum processo alocado entre o processo removido e o intervalo livre
                 else:
                     novo_intervalo = Interval(indice_inicial, indice_final)
