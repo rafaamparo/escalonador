@@ -33,10 +33,10 @@ dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_
 processo1 = Process(
     id=id_inicial_de_processos,
     t_chegada=0,
-    t_execucao_fase_1=2,
-    t_disco=8,
+    t_execucao_fase_1=1,
+    t_disco=10,
     t_execucao_fase_2=6,
-    tamanho=600,
+    tamanho=950,
     qtd_discos=2,
     quantum=quantum,
     dispatcher=dispatcher
@@ -44,9 +44,9 @@ processo1 = Process(
 id_inicial_de_processos += 1
 processo2 = Process(
     id=id_inicial_de_processos,
-    t_chegada=1,
+    t_chegada=4,
     t_execucao_fase_1=1,
-    t_disco=3,
+    t_disco=13,
     t_execucao_fase_2=1,
     tamanho=950,
     qtd_discos=3,
@@ -56,11 +56,11 @@ processo2 = Process(
 id_inicial_de_processos += 1
 processo3 = Process(
     id=id_inicial_de_processos,
-    t_chegada=2,
+    t_chegada=4,
     t_execucao_fase_1=5,
     t_disco=3,
     t_execucao_fase_2=7,
-    tamanho=948,
+    tamanho=548,
     qtd_discos=1,
     quantum=quantum,
     dispatcher=dispatcher
@@ -135,6 +135,35 @@ while executando_escalonador:
             if (processo.bloqueado):
                 fila_de_bloqueados.append(processo)
                 print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
+        else:
+            if (processo.suspenso_bloqueado):
+                continue
+
+            if (processo.suspenso_pronto):
+                processos_bloqueados = [processo for processo in fila_de_bloqueados if processo.bloqueado == True]
+                print(f"DEBUG: processos_bloqueados: {[f'Processo {processo.identificador} ({processo.tamanho}mb)' for processo in processos_bloqueados]}")
+
+                for processo_bloq in processos_bloqueados:
+                    if ((processo_bloq.t_disco >= 10) and ((processo_bloq.t_disco - processo_bloq.tempo_decorrido_disco >= (processo_bloq.t_disco/2)))):
+                        print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloq.identificador} ({processo_bloq.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
+                        if memoria.podeDesalocar(processo, processo_bloq):
+                            memoria.remover_processo(processo_bloq)
+                            processo_bloq.suspender()
+                            fila_de_suspensos.append(processo_bloq)
+                            print(f"DEBUG: Processo {processo_bloq.identificador} foi removido ")
+                            break
+
+                if memoria.admite_processo(processo, False):
+                    fila_de_suspensos.remove(processo)
+                    processo.voltar_para_mp()
+
+                    if (processo.pronto):
+                        filas[0].append(processo)
+                        print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
+                    if (processo.bloqueado):
+                        fila_de_bloqueados.append(processo)
+                        print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
+            
 
 
     #!  Admissão de processos
@@ -147,23 +176,20 @@ while executando_escalonador:
             processo.admitir()
             print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
         else:
-            # tentar suspender um processo bloqueado para liberar espaço necessário na MP
-            # concat fila_de_bloqueados and bloqueados_em_execucao (fila_de_bloqueados should be the first to be checked)
             fila_total_bloqueados = fila_de_bloqueados + bloqueados_em_execucao
 
             print(f"DEBUG: fila_total_bloqueados: ", [f'Processo {processo.identificador} ({processo.indice_inicial_mp} - {processo.indice_final_mp})' for processo in fila_total_bloqueados])
-            # TO-DO: Filtrar os processo com longo tempo de disco
             for processo_bloqueado in fila_total_bloqueados:
-                if (processo_bloqueado.suspenso_bloqueado or processo_bloqueado.suspenso_pronto):
+                if ((processo_bloqueado.suspenso_bloqueado or processo_bloqueado.suspenso_pronto)):
                     continue
-
-                print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloqueado.identificador} ({processo_bloqueado.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
-                if memoria.podeDesalocar(processo, processo_bloqueado):
-                    memoria.remover_processo(processo_bloqueado)
-                    processo_bloqueado.suspender()
-                    fila_de_suspensos.append(processo_bloqueado)
-                    print(f"DEBUG: Processo {processo_bloqueado.identificador} foi removido ")
-                    break
+                if ((processo_bloqueado.t_disco >= 10) and ((processo_bloqueado.t_disco - processo_bloqueado.tempo_decorrido_disco >= (processo_bloqueado.t_disco/2)))):
+                    print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloqueado.identificador} ({processo_bloqueado.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
+                    if memoria.podeDesalocar(processo, processo_bloqueado):
+                        memoria.remover_processo(processo_bloqueado)
+                        processo_bloqueado.suspender()
+                        fila_de_suspensos.append(processo_bloqueado)
+                        print(f"DEBUG: Processo {processo_bloqueado.identificador} foi removido ")
+                        break
 
             if memoria.admite_processo(processo):
                 filas[0].append(processo)
