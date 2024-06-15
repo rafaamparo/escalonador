@@ -10,7 +10,7 @@ from classes.memory import Memory
 unidade_de_tempo = 0
 clock_delay = 0.4
 quantum = 2
-numero_de_cpus = 1 
+numero_de_cpus = 2 
 numero_de_discos = 4
 numero_de_filas = 4
 id_inicial_de_processos = 1
@@ -33,10 +33,10 @@ dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_
 processo1 = Process(
     id=id_inicial_de_processos,
     t_chegada=0,
-    t_execucao_fase_1=4,
-    t_disco=3,
+    t_execucao_fase_1=2,
+    t_disco=8,
     t_execucao_fase_2=6,
-    tamanho=800,
+    tamanho=600,
     qtd_discos=2,
     quantum=quantum,
     dispatcher=dispatcher
@@ -49,7 +49,7 @@ processo2 = Process(
     t_disco=3,
     t_execucao_fase_2=1,
     tamanho=950,
-    qtd_discos=1,
+    qtd_discos=3,
     quantum=quantum,
     dispatcher=dispatcher
 )
@@ -60,7 +60,7 @@ processo3 = Process(
     t_execucao_fase_1=5,
     t_disco=3,
     t_execucao_fase_2=7,
-    tamanho=1024,
+    tamanho=948,
     qtd_discos=1,
     quantum=quantum,
     dispatcher=dispatcher
@@ -72,7 +72,7 @@ processo4 = Process(
     t_execucao_fase_1=2,
     t_disco=2,
     t_execucao_fase_2=3,
-    tamanho=2048,
+    tamanho=750,
     qtd_discos=2,
     quantum=quantum,
     dispatcher=dispatcher
@@ -144,14 +144,37 @@ while executando_escalonador:
         if memoria.admite_processo(processo):
             filas[0].append(processo)
             fila_de_novos.remove(processo)
-            #processo.admitir()
+            processo.admitir()
             print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
         else:
             # tentar suspender um processo bloqueado para liberar espaço necessário na MP
-            fila_de_novos.remove(processo)
-            processo.admitir()
-            processo.suspender()
-            fila_de_suspensos.append(processo)
+            # concat fila_de_bloqueados and bloqueados_em_execucao (fila_de_bloqueados should be the first to be checked)
+            fila_total_bloqueados = fila_de_bloqueados + bloqueados_em_execucao
+
+            print(f"DEBUG: fila_total_bloqueados: ", [f'Processo {processo.identificador} ({processo.indice_inicial_mp} - {processo.indice_final_mp})' for processo in fila_total_bloqueados])
+            # TO-DO: Filtrar os processo com longo tempo de disco
+            for processo_bloqueado in fila_total_bloqueados:
+                if (processo_bloqueado.suspenso_bloqueado or processo_bloqueado.suspenso_pronto):
+                    continue
+
+                print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloqueado.identificador} ({processo_bloqueado.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
+                if memoria.podeDesalocar(processo, processo_bloqueado):
+                    memoria.remover_processo(processo_bloqueado)
+                    processo_bloqueado.suspender()
+                    fila_de_suspensos.append(processo_bloqueado)
+                    print(f"DEBUG: Processo {processo_bloqueado.identificador} foi removido ")
+                    break
+
+            if memoria.admite_processo(processo):
+                filas[0].append(processo)
+                fila_de_novos.remove(processo)
+                processo.admitir()
+                print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
+            else: 
+                fila_de_novos.remove(processo)
+                processo.admitir()
+                processo.suspender()
+                fila_de_suspensos.append(processo)
 
     # ! Escalonamento de processos
     for (i, fila) in enumerate(filas):
