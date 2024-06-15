@@ -1,7 +1,7 @@
 # crie a classe Process com o tamanho do processo, o tempo de chegada e o tempo de execução
 
 class Process:
-    def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, dispatcher, quantum=3):
+    def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, quantum=3):
         self.identificador = id
         self.tamanho = tamanho
         self.t_chegada = t_chegada
@@ -17,7 +17,6 @@ class Process:
         self.disco_finalizado = False
 
         self.contador_quantum = 0
-        self.dispatcher = dispatcher
         self.t_bloqueado = 0
         self.tempo_decorrido_disco = 0
         self.tempo_executado = 0
