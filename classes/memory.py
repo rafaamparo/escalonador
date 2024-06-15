@@ -12,9 +12,7 @@ class Memory():
     
     def printIntervalosLivres(self):
         self.atualiza_intervalos_livres()
-        print(f"Intervalos livres: {[
-            f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres
-        ]}")
+        print(f"Intervalos livres: {[f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres]}")
 
 
     def admite_processo(self, processo: Process, printarLogs=True):
