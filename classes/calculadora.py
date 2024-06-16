@@ -8,7 +8,6 @@ class CalculadoraDeTempos:
         tq = self.processo.t_total_execucao - self.processo.t_chegada
         return tq
     
-
     def calculaTempoNormalizado(self):
         tn = self.calculaTurnaroundTime() / self.processo.t_total_execucao
 

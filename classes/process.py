@@ -12,6 +12,7 @@ class Process:
         self.qtd_discos = qtd_discos
         self.qtd_disco_alocado = 0
         self.quantum = quantum
+        self.tempo_final = 0
 
         self.executou_disco = False
         self.disco_finalizado = False

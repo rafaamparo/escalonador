@@ -229,6 +229,23 @@ while executando_escalonador:
     if (len(fila_de_finalizados) == len(fila_de_processos)) and all(cpu.logRemanescente is None for cpu in lista_de_cpus):
         executando_escalonador = False
 
+
+dict_finalizados = {item['processo']: item['tempo'] for item in lista_finalizados}
+print(dict_finalizados)
+
+for processo in processos:
+    processo.tempo_final = dict_finalizados[processo.identificador]
+
+for processo in processos:
+    print("Tempo de fim do Processo #" + str(processo.identificador) + ": " + str(processo.tempo_final))
+    print("Turnaround Time (Tq) do Processo #" + str(processo.identificador) + ": " + str(processo.tempo_final - processo.t_chegada))
+    print("Tempo em fila normalizado (Tn = Tq / Ts) do Processo #" + str(processo.identificador) + ": " + str((processo.tempo_final - processo.t_chegada) / processo.t_total_execucao))
+    print("---------------------------------------------")
+
+
+
+
+
 print(" ")
 print("Fim da execução")
 print(" ")
