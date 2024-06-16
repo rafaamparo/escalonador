@@ -29,8 +29,6 @@ class Cpu():
             self.processo.executar()
             if self.processo.finalizado:
                 self.dispatcher.organizar_finalizados(self.processo)
-
-                self.logRemanescente = f"Processo {self.processo.identificador} foi finalizado"
                 self.processo = None
             elif self.processo.bloqueado:
                 self.dispatcher.organizar_bloqueados(self.processo)

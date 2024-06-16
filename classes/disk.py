@@ -31,7 +31,11 @@ class Disk():
                     self.dispatcher.remover_bloqueado(self.processo)
                     self.dispatcher.remover_bloqueado_em_execucao(self.processo)
                     if (self.processo.pronto == True):
-                        self.dispatcher.organizar_prontos(self.processo, 0) # ! Adiciona o processo na fila de prontos 0
+                        if (self.processo.t_execucao_fase_2 == 0):
+                            self.processo.finalizar()
+                            self.dispatcher.organizar_finalizados(self.processo)
+                        else:
+                            self.dispatcher.organizar_prontos(self.processo, 0) # ! Adiciona o processo na fila de prontos 0
                     self.processo.disco_finalizado = True
                 self.processo = None
         return

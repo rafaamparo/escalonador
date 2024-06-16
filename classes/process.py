@@ -12,7 +12,10 @@ class Process:
         self.quantum = quantum
 
         self.executou_disco = False
-        self.disco_finalizado = False
+        if self.t_disco == 0:
+            self.disco_finalizado = True
+        else:
+            self.disco_finalizado = False
 
         self.contador_quantum = 0
         self.t_bloqueado = 0
@@ -149,11 +152,11 @@ class Process:
 
         print(f"Processo {self.identificador} em execução | Fase: { 1 if self.tempo_executado <= self.t_execucao_fase_1 else 2} | {self.tempo_executado}/{self.t_execucao_fase_1 + self.t_execucao_fase_2}")
 
-        if self.tempo_executado == self.t_execucao_fase_1: # ! Se o processo terminou a fase 1, será bloqueado
+        if (self.tempo_executado == self.t_execucao_fase_1) and (self.disco_finalizado == False): # ! Se o processo terminou a fase 1, será bloqueado
             self.bloquear()
             return
         
-        if self.tempo_executado == self.t_execucao_fase_1 + self.t_execucao_fase_2: # ! Se o processo terminou a fase 2, será finalizado
+        if (self.tempo_executado == self.t_execucao_fase_1 + self.t_execucao_fase_2) and (self.disco_finalizado == True): # ! Se o processo terminou a fase 2, será finalizado
             self.finalizar()
             return
 
