@@ -4,9 +4,9 @@ import copy
 
 class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
-        # vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
-        # self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
-        self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 950
+        # ! Vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
+        self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
+        # self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 950
         self.intervalos_livres = []
         self.atualiza_intervalos_livres()
     
@@ -16,20 +16,19 @@ class Memory():
 
 
     def admite_processo(self, processo: Process, printarLogs=True):
-        # política best fit: achar o menor espaço contínuo possível para alocar o processo
+        # ! Política best fit: achar o menor espaço contínuo possível para alocar o processo
         self.atualiza_intervalos_livres()
 
         intervalos_livres = copy.deepcopy(self.intervalos_livres)
 
         intervalos_livres = sorted(intervalos_livres, key=lambda x: (x[1] - x[0]))
 
-        # print(f"Intervalos livres: {intervalos_livres}")
         for intervalo in intervalos_livres:
             if((intervalo[1] - intervalo[0] + 1) >= processo.tamanho):
                 inicio_intervalo = intervalo[0]
-                fim_intervalo = inicio_intervalo + processo.tamanho - 1 # processo.tamanho + inicio_intervalo + 1
+                fim_intervalo = inicio_intervalo + processo.tamanho - 1
                 for i in range(inicio_intervalo, fim_intervalo + 1):
-                    self.memoria_principal[i] = True
+                    self.memoria_principal[i] = True # ! Ocupa o espaço no vetor que representa a MP
                 processo.indice_inicial_mp = inicio_intervalo
                 processo.indice_final_mp = processo.tamanho + inicio_intervalo
                 processo.admitir()
@@ -43,33 +42,24 @@ class Memory():
     def remover_processo(self, processo: Process):
         for i in range(processo.indice_inicial_mp, processo.indice_final_mp):
             self.memoria_principal[i] = False
-        #processo.suspender()
         processo.indice_final_mp = None
         processo.indice_inicial_mp = None
-
         self.atualiza_intervalos_livres()
-
-        print(f"O processo {processo.identificador} foi removido da memória principal")
+        print(f"O processo {processo.identificador} foi suspenso e removido da memória principal")
         return
 
     def finalizar_processo(self, processo: Process):
         for i in range(processo.indice_inicial_mp, processo.indice_final_mp):
-            self.memoria_principal[i] = False
-
+            self.memoria_principal[i] = False # ! Libera o espaço no vetor que representa a MP
         processo.indice_final_mp = None
         processo.indice_inicial_mp = None
-
-        # FALTOU ATUALIZAR OS INTERVALOS LIVRES AQUI
         self.atualiza_intervalos_livres()
-
-        # print(f"Intervalos livres: {self.intervalos_livres}")
         print(f"O processo {processo.identificador} foi finalizado e removido da memória principal")
         return
 
     def atualiza_intervalos_livres(self):
         self.intervalos_livres = []
         inicio = None
-    
         # Percorre a memória principal para encontrar os intervalos livres
         for i in range(len(self.memoria_principal)):
             if self.memoria_principal[i] == False:  # Se a célula está livre
@@ -84,17 +74,15 @@ class Memory():
         if inicio is not None:
             self.intervalos_livres.append([inicio, len(self.memoria_principal) - 1])
 
-    def podeDesalocar(self, processoNovo: Process, processoAlocado: Process):
+    def podeDesalocar(self, processoNovo: Process, processoAlocado: Process): # ! Verifica se é possível desalocar o processo alocado para alocar o processo novo
         tamanho_continuo_necessario = processoNovo.tamanho
         indice_inicial = processoAlocado.indice_inicial_mp
         indice_final = processoAlocado.indice_final_mp
-
         if (indice_inicial == None or indice_final == None):
             return False
-
+        
         copia_memoria_principal = copy.deepcopy(self.memoria_principal)
-
-        for i in range(indice_inicial, indice_final):
+        for i in range(indice_inicial, indice_final): # ! Simula a desalocação do processo alocado
             copia_memoria_principal[i] = False
         
         intervalos_livres = []
@@ -117,6 +105,6 @@ class Memory():
         intervalos_livres = sorted(intervalos_livres, key=lambda x: (x[1] - x[0]))
 
         for intervalo in intervalos_livres:
-            if((intervalo[1] - intervalo[0] + 1) >= tamanho_continuo_necessario):
+            if((intervalo[1] - intervalo[0] + 1) >= tamanho_continuo_necessario): # ! Verifica se o intervalo livre encontrado é suficiente para alocar o processo novo
                 return True
         return False

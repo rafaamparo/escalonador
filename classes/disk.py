@@ -25,13 +25,13 @@ class Disk():
     def executar(self):
         if self.processo is not None:
             self.processo.executar_disco()
-            if self.processo.pronto == True or self.processo.suspenso_pronto == True:
+            if self.processo.pronto == True or self.processo.suspenso_pronto == True: # ! Se o processo foi desbloqueado
                 if (self.processo.disco_finalizado == False):
                     self.logRemanescente = f'Processo {self.processo.identificador} foi desbloqueado'
                     self.dispatcher.remover_bloqueado(self.processo)
                     self.dispatcher.remover_bloqueado_em_execucao(self.processo)
                     if (self.processo.pronto == True):
-                        self.dispatcher.organizar_prontos(self.processo, 0)
+                        self.dispatcher.organizar_prontos(self.processo, 0) # ! Adiciona o processo na fila de prontos 0
                     self.processo.disco_finalizado = True
                 self.processo = None
         return

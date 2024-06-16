@@ -1,6 +1,8 @@
 import os
 from classes.process import Process
 
+# ! Classe responsável por ler o arquivo de entrada e carregar os processos
+
 class LeitorArquivo:
     def __init__(self, caminho_arquivo, quantum, id_inicial = 1):
         dir = os.path.realpath(".")

@@ -1,7 +1,7 @@
 from rich.console import Console
 from rich.table import Table
 
-
+# ! Classe que gera a tabela de execução dos processos
 class Traceback():
     def __init__(self, fila_de_processos):
         self.dadosDoEscalonamento = []

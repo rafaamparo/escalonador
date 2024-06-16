@@ -1,5 +1,3 @@
-# crie a classe Process com o tamanho do processo, o tempo de chegada e o tempo de execução
-
 class Process:
     def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, quantum=3):
         self.identificador = id
@@ -48,7 +46,7 @@ class Process:
 
         return f"Processo {self.identificador} | Chegada: {self.t_chegada} | Execução fase 1: {self.t_execucao_fase_1} u.t. | Tempo de E/S: {self.t_disco} u.t. | Execução fase 2: {self.t_execucao_fase_2} u.t. | Tamanho: {self.tamanho}mb | Qtd. Discos: {self.qtd_discos} | Status: {actual_status or 'Novo'}"
     
-    def mudar_estado(self):
+    def mudar_estado(self): # ! Método para mudar o estado do processo
         self.bloqueado = False
         self.finalizado = False
         self.executando = False
@@ -65,7 +63,6 @@ class Process:
         self.mudar_estado()
         self.pronto = True
 
-        # print(f"Processo {self.identificador} foi admitido na Memória Principal")
 
     def bloquear(self):
         if not self.executando:
@@ -78,8 +75,6 @@ class Process:
         self.bloqueado = True
         self.contador_quantum = 0
 
-        # print(f"Processo {self.identificador} será bloqueado")
-
     def desbloquear(self):	
         if (not self.bloqueado and not self.suspenso_bloqueado):
             return
@@ -91,9 +86,6 @@ class Process:
         if (self.suspenso_bloqueado):
             self.mudar_estado()
             self.suspenso_pronto = True
-        # self.fila_de_bloqueados.remove(self)
-        # self.fila_de_prontos.append(self)
-        # print(f"Processo {self.identificador} foi desbloqueado")
     
     def preempcao(self):
         if not self.executando:
@@ -102,8 +94,6 @@ class Process:
         self.contador_quantum = 0
         self.mudar_estado()
         self.pronto = True
-        
-        # print(f"Processo {self.identificador} foi interrompido por fatia de tempo")
 
     def finalizar(self):
         if not self.executando:
@@ -115,7 +105,6 @@ class Process:
         self.mudar_estado()
         self.finalizado = True
 
-        # print(f"Processo {self.identificador} foi finalizado")
 
     def suspender(self):
         if self.suspenso_bloqueado or self.suspenso_pronto:
@@ -141,13 +130,11 @@ class Process:
         if self.suspenso_bloqueado:
             self.mudar_estado()
             self.bloqueado = True
-
             print(f"Processo {self.identificador} voltou para a fila de bloqueados da Memória Principal")
 
         else:
             self.mudar_estado()
             self.pronto = True
-
             print(f"Processo {self.identificador} voltou para a fila de prontos da Memória Principal")
 
     def executar(self):
@@ -162,11 +149,11 @@ class Process:
 
         print(f"Processo {self.identificador} em execução | Fase: { 1 if self.tempo_executado <= self.t_execucao_fase_1 else 2} | {self.tempo_executado}/{self.t_execucao_fase_1 + self.t_execucao_fase_2}")
 
-        if self.tempo_executado == self.t_execucao_fase_1:
+        if self.tempo_executado == self.t_execucao_fase_1: # ! Se o processo terminou a fase 1, será bloqueado
             self.bloquear()
             return
         
-        if self.tempo_executado == self.t_execucao_fase_1 + self.t_execucao_fase_2:
+        if self.tempo_executado == self.t_execucao_fase_1 + self.t_execucao_fase_2: # ! Se o processo terminou a fase 2, será finalizado
             self.finalizar()
             return
 
@@ -179,7 +166,7 @@ class Process:
         self.executou_disco = False
     
 
-    def executar_disco(self):
+    def executar_disco(self): 
         if self.executou_disco or self.suspenso_pronto or self.finalizado or self.pronto or self.executando or self.novo:
             return
     

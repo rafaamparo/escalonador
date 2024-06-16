@@ -8,6 +8,8 @@ from util.traceback import Traceback
 from classes.memory import Memory
 from classes.leitorArquivo import LeitorArquivo
 
+# ! Variáveis de configuração
+
 unidade_de_tempo = 0
 clock_delay = 0.4
 quantum = 2
@@ -43,10 +45,9 @@ for i in range(numero_de_discos):
     
 fila_de_processos = processos
 
-traceback = Traceback(fila_de_processos=fila_de_processos) #Para gerar tabela de escalonamento ao fim da execução
+traceback = Traceback(fila_de_processos=fila_de_processos) # ! Para gerar tabela de escalonamento ao fim da execução
 
-
-# Nosso escalonador de processos
+# ! Nosso escalonador de processos
 executando_escalonador = True
 while executando_escalonador:
     print(f"[Tempo: {unidade_de_tempo}]")
@@ -81,35 +82,36 @@ while executando_escalonador:
 
     # ! Volta de processos suspensos à MP
     for processo in fila_de_suspensos.copy():
-        if memoria.admite_processo(processo, False):
+        if memoria.admite_processo(processo, False): # ! Verifica se há espaço suficiente na MP para realocar um processo sem a necessidade de desalocar outro
             fila_de_suspensos.remove(processo)
             processo.voltar_para_mp()
 
-            if (processo.pronto):
+            if (processo.pronto): # ! Processos suspensos-prontos voltam sempre para a fila de prontos 0
                 filas[0].append(processo)
                 print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
-            if (processo.bloqueado):
+            if (processo.bloqueado): # ! Processos suspensos-bloqueados voltam sempre para a fila de bloqueados
                 fila_de_bloqueados.append(processo)
                 print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
         else:
             if (processo.suspenso_bloqueado):
                 continue
 
-            if (processo.suspenso_pronto):
+            if (processo.suspenso_pronto): # ! Verifica se há processo bloqueado na MP que pode ser desalocado para dar espaço a um processo suspenso-pronto
                 processos_bloqueados = [processo for processo in fila_de_bloqueados if processo.bloqueado == True]
                 print(f"DEBUG: processos_bloqueados: {[f'Processo {processo.identificador} ({processo.tamanho}mb)' for processo in processos_bloqueados]}")
 
                 for processo_bloq in processos_bloqueados:
+                    # ! Verificar se o processo bloqueado está dentro de certas condições que tornam eficiente para o sistema desalocá-lo
                     if ((processo_bloq.t_disco >= 10) and ((processo_bloq.t_disco - processo_bloq.tempo_decorrido_disco >= (processo_bloq.t_disco/2)))):
                         print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloq.identificador} ({processo_bloq.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
-                        if memoria.podeDesalocar(processo, processo_bloq):
+                        if memoria.podeDesalocar(processo, processo_bloq): # ! Função que simula, na memória, o resultado de desalocar um processo, verificando se o intervalo de memória resultante é suficiente para alocar outro
                             memoria.remover_processo(processo_bloq)
                             processo_bloq.suspender()
-                            fila_de_suspensos.append(processo_bloq)
+                            fila_de_suspensos.append(processo_bloq) # ! Adiciona o processo desalocado na fila de suspensos
                             print(f"DEBUG: Processo {processo_bloq.identificador} foi removido ")
                             break
 
-                if memoria.admite_processo(processo, False):
+                if memoria.admite_processo(processo, False): # ! Volta do processo suspenso-pronto para a MP, no espaço em que hoiuve a desalocação do processo bloqueado
                     fila_de_suspensos.remove(processo)
                     processo.voltar_para_mp()
 
@@ -122,37 +124,37 @@ while executando_escalonador:
             
 
 
-    #!  Admissão de processos
-    fila_de_novos_SPN = sorted(fila_de_novos, key=lambda x: x.t_total_execucao)   # ordena a fila de novos seguindo o escalonamento Shortest Process Next - os menores processos possuem prioridade
+    # ! Admissão de processos
+    fila_de_novos_SPN = sorted(fila_de_novos, key=lambda x: x.t_total_execucao)   # ! Ordena a fila de novos seguindo o escalonamento Shortest Process Next - os menores processos possuem prioridade
     for processo in fila_de_novos_SPN:
-        # TO DO: Verificar se o processo pode ser admitido (classe memory)
+        # ! Verificar se o processo pode ser admitido na MP
         if memoria.admite_processo(processo):
             filas[0].append(processo)
             fila_de_novos.remove(processo)
             processo.admitir()
             print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
-        else:
+        else: # ! Verifica se há processo bloqueado que pode ser desalocado para dar espaço ao processo novo
             fila_total_bloqueados = fila_de_bloqueados + bloqueados_em_execucao
-
             print(f"DEBUG: fila_total_bloqueados: ", [f'Processo {processo.identificador} ({processo.indice_inicial_mp} - {processo.indice_final_mp})' for processo in fila_total_bloqueados])
             for processo_bloqueado in fila_total_bloqueados:
                 if ((processo_bloqueado.suspenso_bloqueado or processo_bloqueado.suspenso_pronto)):
                     continue
+                # ! Verificar se o processo bloqueado está dentro de certas condições que tornam eficiente para o sistema desalocá-lo
                 if ((processo_bloqueado.t_disco >= 10) and ((processo_bloqueado.t_disco - processo_bloqueado.tempo_decorrido_disco >= (processo_bloqueado.t_disco/2)))):
                     print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloqueado.identificador} ({processo_bloqueado.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
-                    if memoria.podeDesalocar(processo, processo_bloqueado):
+                    if memoria.podeDesalocar(processo, processo_bloqueado): # ! Função que simula, na memória, o resultado de desalocar um processo, verificando se o intervalo de memória resultante é suficiente para alocar outro
                         memoria.remover_processo(processo_bloqueado)
                         processo_bloqueado.suspender()
                         fila_de_suspensos.append(processo_bloqueado)
                         print(f"DEBUG: Processo {processo_bloqueado.identificador} foi removido ")
                         break
 
-            if memoria.admite_processo(processo):
-                filas[0].append(processo)
+            if memoria.admite_processo(processo): # ! Se houver suspensão de processo bloqueado, o processo é admitido na MP e adicionado à fila de prontos 0
+                filas[0].append(processo) 
                 fila_de_novos.remove(processo)
                 processo.admitir()
                 print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
-            else: 
+            else: # ! Se não houver suspensão possível de processo bloqueado, o processo é suspenso
                 fila_de_novos.remove(processo)
                 processo.admitir()
                 processo.suspender()
@@ -170,9 +172,7 @@ while executando_escalonador:
 
     # ! Escalonamento de Disco
     for processo in fila_de_bloqueados.copy():
-
         discos_livres = [disco for disco in lista_de_discos if disco.obter_processo() is None]
-
         if processo.qtd_discos <= len(discos_livres):
             for disco in discos_livres:
                 if disco.obter_processo() is None and processo.qtd_discos > 0 and processo.qtd_disco_alocado != processo.qtd_discos:
@@ -198,8 +198,6 @@ while executando_escalonador:
         print(f"Disco {disco.id}: {(f'Processo {disco.obter_processo().identificador} (Bloqueado em execução de E/S) ({disco.obter_processo().t_disco - disco.obter_processo().tempo_decorrido_disco} u.t.)' if disco.obter_processo() is not None else None) or 'Livre'}")
     print(" ")
 
-
-
     # ! Execução dos processos
     for cpu in lista_de_cpus:
         if cpu.obter_processo() is not None:
@@ -212,18 +210,16 @@ while executando_escalonador:
 
     # ! Execução do DMA
     for disco in lista_de_discos:
-        disco.executar()
-        
+        disco.executar()     
     for processo in bloqueados_em_execucao.copy():
         processo.permitir_execucao_disco()
     
     traceback.dadosDoEscalonamento.append(dadoDoEscalonamentoAtual)
-
-
     unidade_de_tempo += 1
     time.sleep(clock_delay)
     print("-"*40)
 
+    # ! Condição de parada
     if (len(fila_de_finalizados) == len(fila_de_processos)) and all(cpu.logRemanescente is None for cpu in lista_de_cpus):
         executando_escalonador = False
 

@@ -38,9 +38,9 @@ class Cpu():
                 self.logRemanescente = f"Processo {self.processo.identificador} foi bloqueado"
                 self.processo = None
             elif self.processo.contador_quantum == self.processo.quantum:
-                self.processo.preempcao()
+                self.processo.preempcao() # ! Se o processo atingiu o quantum, ele é interrompido por fatia de tempo
                 if (self.filaAtual + 1) < self.filas_qtd:
-                    self.dispatcher.organizar_prontos(self.processo, (self.filaAtual + 1) % (self.filas_qtd))
+                    self.dispatcher.organizar_prontos(self.processo, (self.filaAtual + 1) % (self.filas_qtd)) # ! Após preempção, o processo vai para a fila de prontos seguinte
                 else:
                     self.dispatcher.organizar_prontos(self.processo, self.filaAtual)
                 self.logRemanescente = f"Processo {self.processo.identificador} foi interrompido por fatia de tempo"
