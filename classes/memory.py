@@ -1,6 +1,13 @@
 from classes.process import Process
 from classes.dispatcher import Dispatcher
 import copy
+from rich.text import Text
+from rich.progress import Progress, BarColumn
+from rich.console import Console
+from rich.bar import Bar
+from rich.measure import Measurement
+from rich.panel import Panel
+from rich.console import Group
 
 class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
@@ -9,10 +16,34 @@ class Memory():
         # self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 950
         self.intervalos_livres = []
         self.atualiza_intervalos_livres()
+        self.console = Console()
+
+
+
     
     def printIntervalosLivres(self):
         self.atualiza_intervalos_livres()
-        print(f"Intervalos livres: {[f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres]}")
+        
+
+
+        memory_text = Text()
+        tamanho = 200
+        segment_size = len(self.memoria_principal) // tamanho  # Tamanho de cada segmento
+
+        for i in range(tamanho):
+            start_index = i * segment_size
+            end_index = min((i + 1) * segment_size, len(self.memoria_principal))
+            
+            segment = self.memoria_principal[start_index:end_index]
+            occupied_count = sum(segment)
+            free_count = segment_size - occupied_count
+
+            if occupied_count > free_count:
+                memory_text.append('█', style='bright_red')
+            else:
+                memory_text.append('█', style='bright_green')
+
+        self.console.print(Panel(Group(Panel(memory_text), Panel(Text(f"{" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres])}", justify="center", style="white"), title="[white]Intervalos Livres")), title="[white]Memória Principal", style="yellow"))
 
 
     def admite_processo(self, processo: Process, printarLogs=True):
@@ -32,10 +63,10 @@ class Memory():
                 processo.indice_inicial_mp = inicio_intervalo
                 processo.indice_final_mp = processo.tamanho + inicio_intervalo
                 processo.admitir()
-                print(f"Processo {processo.identificador} foi alocado na Memória Principal no intervalo [{inicio_intervalo}, {fim_intervalo}]")
+                self.console.print(f"Processo {processo.identificador} foi alocado na Memória Principal no intervalo [{inicio_intervalo}, {fim_intervalo}]")
                 return True
         if printarLogs:
-            print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento")
+            self.console.print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento")
         #processo.suspender()
         return False
     
@@ -45,7 +76,7 @@ class Memory():
         processo.indice_final_mp = None
         processo.indice_inicial_mp = None
         self.atualiza_intervalos_livres()
-        print(f"O processo {processo.identificador} foi suspenso e removido da memória principal")
+        self.console.print(f"O processo {processo.identificador} foi suspenso e removido da memória principal")
         return
 
     def finalizar_processo(self, processo: Process):
@@ -54,7 +85,7 @@ class Memory():
         processo.indice_final_mp = None
         processo.indice_inicial_mp = None
         self.atualiza_intervalos_livres()
-        print(f"O processo {processo.identificador} foi finalizado e removido da memória principal")
+        self.console.print(f"O processo {processo.identificador} foi finalizado e removido da memória principal")
         return
 
     def atualiza_intervalos_livres(self):
@@ -99,8 +130,8 @@ class Memory():
         if inicio is not None:
             intervalos_livres.append([inicio, len(copia_memoria_principal) - 1])
 
-        print(f"DEBUG: Intervalos livres: {intervalos_livres}")
-        print(f"DEBUG: Tamanhos dos intervalos livres: {[f'{intervalo[1] - intervalo[0] + 1}mb' for intervalo in intervalos_livres]}")
+        self.console.print(f"DEBUG: Intervalos livres: {intervalos_livres}")
+        self.console.print(f"DEBUG: Tamanhos dos intervalos livres: {[f'{intervalo[1] - intervalo[0] + 1}mb' for intervalo in intervalos_livres]}")
 
         intervalos_livres = sorted(intervalos_livres, key=lambda x: (x[1] - x[0]))
 

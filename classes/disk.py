@@ -1,9 +1,12 @@
+from rich.console import Console
+
 class Disk():
     def __init__(self, id, dispatcher):
         self.id = id
         self.dispatcher = dispatcher
         self.processo = None
         self.logRemanescente = None
+        self.console = Console()
         
 
     def __str__(self):
@@ -18,7 +21,7 @@ class Disk():
 
     def remanescente(self):
         if self.logRemanescente is not None:
-            print(self.logRemanescente)
+            self.console.print(self.logRemanescente)
             self.logRemanescente = None
         return
 

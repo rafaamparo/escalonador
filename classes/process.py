@@ -1,3 +1,5 @@
+from rich.console import Console
+
 class Process:
     def __init__(self, id, t_chegada, t_execucao_fase_1, t_disco,  t_execucao_fase_2,  tamanho, qtd_discos, quantum=3):
         self.identificador = id
@@ -10,6 +12,7 @@ class Process:
         self.qtd_discos = qtd_discos
         self.qtd_disco_alocado = 0
         self.quantum = quantum
+        self.console = Console()
 
         self.executou_disco = False
         if self.t_disco == 0:
@@ -119,12 +122,12 @@ class Process:
         if self.bloqueado:
             self.mudar_estado()
             self.suspenso_bloqueado = True
-            print(f"Processo {self.identificador} foi Suspenso")
+            self.console.print(f"Processo {self.identificador} foi Suspenso")
 
         else:
             self.mudar_estado()
             self.suspenso_pronto = True
-            print(f"Processo {self.identificador} foi Suspenso")
+            self.console.print(f"Processo {self.identificador} foi Suspenso")
 
     def voltar_para_mp(self):
         if (not self.suspenso_bloqueado) and (not self.suspenso_pronto):
@@ -133,12 +136,12 @@ class Process:
         if self.suspenso_bloqueado:
             self.mudar_estado()
             self.bloqueado = True
-            print(f"Processo {self.identificador} voltou para a fila de bloqueados da Memória Principal")
+            self.console.print(f"Processo {self.identificador} voltou para a fila de bloqueados da Memória Principal")
 
         else:
             self.mudar_estado()
             self.pronto = True
-            print(f"Processo {self.identificador} voltou para a fila de prontos da Memória Principal")
+            self.console.print(f"Processo {self.identificador} voltou para a fila de prontos da Memória Principal")
 
     def executar(self):
         if self.suspenso_bloqueado or self.suspenso_pronto or self.finalizado or self.bloqueado:
@@ -150,7 +153,7 @@ class Process:
         self.tempo_executado += 1
         self.contador_quantum += 1
 
-        print(f"Processo {self.identificador} em execução | Fase: { 1 if self.tempo_executado <= self.t_execucao_fase_1 else 2} | {self.tempo_executado}/{self.t_execucao_fase_1 + self.t_execucao_fase_2}")
+        self.console.print(f"Processo {self.identificador} em execução | Fase: { 1 if self.tempo_executado <= self.t_execucao_fase_1 else 2} | {self.tempo_executado}/{self.t_execucao_fase_1 + self.t_execucao_fase_2}")
 
         if (self.tempo_executado == self.t_execucao_fase_1) and (self.disco_finalizado == False): # ! Se o processo terminou a fase 1, será bloqueado
             self.bloquear()
@@ -184,7 +187,7 @@ class Process:
         self.tempo_decorrido_disco += 1
         self.executou_disco = True
         
-        print(f"Processo {self.identificador} está sendo executado em disco: {self.tempo_decorrido_disco}/{self.t_disco}")
+        self.console.print(f"Processo {self.identificador} está sendo executado em disco: {self.tempo_decorrido_disco}/{self.t_disco}")
         
         if self.tempo_decorrido_disco == self.t_disco:
             self.desbloquear()

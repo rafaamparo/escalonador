@@ -19,4 +19,4 @@ class Traceback():
 
         
         console = Console()
-        console.print(table)
+        console.print(table, justify="center")

@@ -1,3 +1,5 @@
+from rich.console import Console
+
 class Cpu():
     def __init__(self,id, filas_qtd, dispatcher):
         self.id = id
@@ -6,6 +8,7 @@ class Cpu():
         self.filaAtual = None
         self.dispatcher = dispatcher
         self.logRemanescente = None
+        self.console = Console()
         
     def __str__(self):
         return f'CPU {self.id}'
@@ -20,7 +23,7 @@ class Cpu():
 
     def remanescente(self):
         if self.logRemanescente is not None:
-            print(self.logRemanescente)
+            self.console.print(self.logRemanescente)
             self.logRemanescente = None
         return
 
