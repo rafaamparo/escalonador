@@ -14,13 +14,13 @@ from rich.panel import Panel
 # * Variáveis de configuração
 
 unidade_de_tempo = 0
-clock_delay = 0
-quantum = 2
-numero_de_cpus = 1
+clock_delay = 0.5
+quantum = 3
+numero_de_cpus = 4
 numero_de_discos = 4
-numero_de_filas = 3
+numero_de_filas = 4
 id_inicial_de_processos = 1
-capacidade_total_mb = 5000
+capacidade_total_mb = 32000
 
 fila_de_processos = []
 lista_de_cpus = []
@@ -92,9 +92,9 @@ while executando_escalonador:
             if (processo.pronto): # Processos suspensos-prontos voltam sempre para a fila de prontos 0
                 filas[0].append(processo)
                 console.print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
-            if (processo.bloqueado): # Processos suspensos-bloqueados voltam sempre para a fila de bloqueados
-                fila_de_bloqueados.append(processo)
-                console.print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
+            # if (processo.bloqueado): # Processos suspensos-bloqueados voltam sempre para a fila de bloqueados
+            #     fila_de_bloqueados.append(processo)
+            #     console.print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
         else:
             if (processo.suspenso_bloqueado):
                 continue
@@ -202,14 +202,16 @@ while executando_escalonador:
         (f"Disco {disco.id}: {(f'Processo {disco.obter_processo().identificador} (Bloqueado em execução de E/S) ({disco.obter_processo().t_disco - disco.obter_processo().tempo_decorrido_disco} u.t.)' if disco.obter_processo() is not None else None) or 'Livre'}")
         for disco in lista_de_discos
     ]
+    tag = "[white bold](Ex)" 
+    vazio = ""
 
     panel_group = Group(
     Panel(f"Fila de Novos: {[f'Processo {processo.identificador}' for processo in fila_de_novos]}"),
     Panel(Group(*panels_filas_prontos)),
     Panel(Group(
-        (f"Fila de Bloqueados: {[f'Processo {processo.identificador} ({processo.qtd_discos} discos)' for processo in (fila_de_bloqueados + bloqueados_em_execucao)]}"),
+        (f"Fila de Bloqueados: {[f'Processo {processo.identificador} ({processo.qtd_discos} discos) {tag if processo in bloqueados_em_execucao else vazio}' for processo in (fila_de_bloqueados + bloqueados_em_execucao) if processo.suspenso_bloqueado == False]}"),
         (f"Fila de Suspensos-Prontos: {[f'Processo {processo.identificador}' for processo in fila_de_suspensos if processo.suspenso_pronto]}"),
-        (f"Fila de Suspensos-Bloqueados: {[f'Processo {processo.identificador}' for processo in fila_de_suspensos if processo.suspenso_bloqueado]}")
+        (f"Fila de Suspensos-Bloqueados: {[f'Processo {processo.identificador} ({processo.qtd_discos} discos) {tag if processo in bloqueados_em_execucao else vazio}' for processo in fila_de_suspensos if processo.suspenso_bloqueado]}")
     )),
     Panel(Group(*panels_lista_cpus)),
     Panel(Group(*panels_lista_disco))
