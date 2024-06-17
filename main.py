@@ -7,6 +7,7 @@ from classes.disk import Disk
 from util.traceback import Traceback
 from classes.memory import Memory
 from classes.leitorArquivo import LeitorArquivo
+from classes.calculadora import CalculadoraDeTempos
 
 unidade_de_tempo = 0
 clock_delay = 0.4
@@ -231,19 +232,16 @@ while executando_escalonador:
 
 
 dict_finalizados = {item['processo']: item['tempo'] for item in lista_finalizados}
-print(dict_finalizados)
+# print(dict_finalizados)
 
 for processo in processos:
     processo.tempo_final = dict_finalizados[processo.identificador]
 
 for processo in processos:
     print("Tempo de fim do Processo #" + str(processo.identificador) + ": " + str(processo.tempo_final))
-    print("Turnaround Time (Tq) do Processo #" + str(processo.identificador) + ": " + str(processo.tempo_final - processo.t_chegada))
-    print("Tempo em fila normalizado (Tn = Tq / Ts) do Processo #" + str(processo.identificador) + ": " + str((processo.tempo_final - processo.t_chegada) / processo.t_total_execucao))
+    print("Turnaround Time (Tq) do Processo #" + str(processo.identificador) + ": " + str(CalculadoraDeTempos.calculaTurnaroundTime(processo)))
+    print("Tempo em fila normalizado (Tn = Tq / Ts) do Processo #" + str(processo.identificador) + ": " + str(CalculadoraDeTempos.calculaTempoNormalizado(processo)))
     print("---------------------------------------------")
-
-
-
 
 
 print(" ")

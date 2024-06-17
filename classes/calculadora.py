@@ -1,13 +1,11 @@
 from classes.process import Process
 
 class CalculadoraDeTempos:
-    def __init__(self, processo: Process):
-        self.processo = processo
+    @staticmethod
+    def calculaTurnaroundTime(processo: Process):
+        return processo.tempo_final - processo.t_chegada
     
-    def calculaTurnaroundTime(self):
-        tq = self.processo.t_total_execucao - self.processo.t_chegada
-        return tq
-    
-    def calculaTempoNormalizado(self):
-        tn = self.calculaTurnaroundTime() / self.processo.t_total_execucao
+    @staticmethod
+    def calculaTempoNormalizado(processo: Process):
+        return CalculadoraDeTempos.calculaTurnaroundTime(processo) / processo.t_total_execucao
 
