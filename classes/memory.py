@@ -109,7 +109,7 @@ class Memory():
         processo.indice_final_mp = None
         processo.indice_inicial_mp = None
         self.atualiza_intervalos_livres()
-        self.console.print(f"O processo {processo.identificador} foi suspenso e removido da memória principal")
+        self.console.print(f"Processo {processo.identificador} foi suspenso e removido da memória principal")
         return
 
     def finalizar_processo(self, processo: Process):
@@ -118,7 +118,7 @@ class Memory():
         processo.indice_final_mp = None
         processo.indice_inicial_mp = None
         self.atualiza_intervalos_livres()
-        self.console.print(f"O processo {processo.identificador} foi finalizado e removido da memória principal")
+        self.console.print(f"Processo {processo.identificador} foi finalizado e removido da memória principal")
         return
 
     def atualiza_intervalos_livres(self):
@@ -162,9 +162,6 @@ class Memory():
                     inicio = None
         if inicio is not None:
             intervalos_livres.append([inicio, len(copia_memoria_principal) - 1])
-
-        self.console.print(f"DEBUG: Intervalos livres: {intervalos_livres}")
-        self.console.print(f"DEBUG: Tamanhos dos intervalos livres: {[f'{intervalo[1] - intervalo[0] + 1}mb' for intervalo in intervalos_livres]}")
 
         intervalos_livres = sorted(intervalos_livres, key=lambda x: (x[1] - x[0]))
 

@@ -92,26 +92,19 @@ while executando_escalonador:
             if (processo.pronto): # Processos suspensos-prontos voltam sempre para a fila de prontos 0
                 filas[0].append(processo)
                 console.print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
-            # if (processo.bloqueado): # Processos suspensos-bloqueados voltam sempre para a fila de bloqueados
-            #     fila_de_bloqueados.append(processo)
-            #     console.print(f"Processo {processo.identificador} foi adicionado na fila de bloqueados")
         else:
             if (processo.suspenso_bloqueado):
                 continue
 
             if (processo.suspenso_pronto): # Verifica se há processo bloqueado na MP que pode ser desalocado para dar espaço a um processo suspenso-pronto
                 processos_bloqueados = [processo for processo in fila_de_bloqueados if processo.bloqueado == True]
-                # console.print(f"DEBUG: processos_bloqueados: {[f'Processo {processo.identificador} ({processo.tamanho}mb)' for processo in processos_bloqueados]}")
-
                 for processo_bloq in processos_bloqueados:
                     # Verificar se o processo bloqueado está dentro de certas condições que tornam eficiente para o sistema desalocá-lo
                     if ((processo_bloq.t_disco >= 10) and ((processo_bloq.t_disco - processo_bloq.tempo_decorrido_disco >= (processo_bloq.t_disco/2)))):
-                        console.print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloq.identificador} ({processo_bloq.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
                         if memoria.podeDesalocar(processo, processo_bloq): # Função que simula, na memória, o resultado de desalocar um processo, verificando se o intervalo de memória resultante é suficiente para alocar outro
                             memoria.remover_processo(processo_bloq)
                             processo_bloq.suspender()
                             fila_de_suspensos.append(processo_bloq) # Adiciona o processo desalocado na fila de suspensos
-                            console.print(f"DEBUG: Processo {processo_bloq.identificador} foi removido ")
                             break
 
                 if memoria.admite_processo(processo, False): # Volta do processo suspenso-pronto para a MP, no espaço em que hoiuve a desalocação do processo bloqueado
@@ -136,19 +129,16 @@ while executando_escalonador:
             console.print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
         else: # Verifica se há processo bloqueado que pode ser desalocado para dar espaço ao processo novo
             fila_total_bloqueados = fila_de_bloqueados + bloqueados_em_execucao
-            # console.print(f"DEBUG: fila_total_bloqueados: ", [f'Processo {processo.identificador} ({processo.indice_inicial_mp} - {processo.indice_final_mp})' for processo in fila_total_bloqueados])
             console.print("Verificando se é possível suspender um processo bloqueado")
             for processo_bloqueado in fila_total_bloqueados:
                 if ((processo_bloqueado.suspenso_bloqueado or processo_bloqueado.suspenso_pronto)):
                     continue
                 # Verificar se o processo bloqueado está dentro de certas condições que tornam eficiente para o sistema desalocá-lo
                 if ((processo_bloqueado.t_disco >= 10) and ((processo_bloqueado.t_disco - processo_bloqueado.tempo_decorrido_disco >= (processo_bloqueado.t_disco/2)))):
-                    console.print(f"DEBUG: Estamos tentando desalocar o processo {processo_bloqueado.identificador} ({processo_bloqueado.tamanho}mb) para adicionar o processo {processo.identificador} ({processo.tamanho}mb)")
                     if memoria.podeDesalocar(processo, processo_bloqueado): # Função que simula, na memória, o resultado de desalocar um processo, verificando se o intervalo de memória resultante é suficiente para alocar outro
                         memoria.remover_processo(processo_bloqueado)
                         processo_bloqueado.suspender()
                         fila_de_suspensos.append(processo_bloqueado)
-                        console.print(f"DEBUG: Processo {processo_bloqueado.identificador} foi removido ")
                         break
 
             if memoria.admite_processo(processo): #  Se houver suspensão de processo bloqueado, o processo é admitido na MP e adicionado à fila de prontos 0

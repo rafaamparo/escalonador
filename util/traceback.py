@@ -24,10 +24,6 @@ class Traceback():
 
     def print_tnormalizado(self):
         console = Console()
-        # console.print(self.dadosDoEscalonamento)
-
-        # for each process get first and last time it was executed
-
         info_processos = {}
         for processo in self.fila_de_processos:
             info_processos[processo.identificador] = {
