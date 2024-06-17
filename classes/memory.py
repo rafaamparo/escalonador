@@ -37,7 +37,7 @@ class Memory():
                 color_index = 172
             return color_index                    
 
-        memory_text = Text()
+        memory_text = Text(justify="center")
         tamanho = self.tamanho_barra
         segment_size = len(self.memoria_principal) // tamanho  # Tamanho de cada segmento
 
@@ -68,7 +68,10 @@ class Memory():
                     for processo in self.processos
                     if processo.indice_inicial_mp is not None
                 ], justify="center")
-        self.console.print(Panel(Group(Panel(memory_text), Panel(Text(f"{" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres])}", justify="center", style="white"), title="[white]Intervalos Livres")), title="[white]Memória Principal", style="yellow"), Panel(text_espaco_alocado_processos, title="[white]Espaço Alocado por Processos", style="yellow"))
+        self.console.print(Panel(Group(
+            Panel(memory_text), 
+            Panel(Text(f"{" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres])}", justify="center", style="white"), title="[white]Intervalos Livres")), title="[white]Memória Principal", style="yellow"),
+             Panel(text_espaco_alocado_processos, title="[white]Espaço Alocado por Processos", style="yellow"))
 
 
     def admite_processo(self, processo: Process, printarLogs=True):
