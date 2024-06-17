@@ -101,7 +101,7 @@ while executando_escalonador:
 
             if (processo.suspenso_pronto): # Verifica se há processo bloqueado na MP que pode ser desalocado para dar espaço a um processo suspenso-pronto
                 processos_bloqueados = [processo for processo in fila_de_bloqueados if processo.bloqueado == True]
-                console.print(f"DEBUG: processos_bloqueados: {[f'Processo {processo.identificador} ({processo.tamanho}mb)' for processo in processos_bloqueados]}")
+                # console.print(f"DEBUG: processos_bloqueados: {[f'Processo {processo.identificador} ({processo.tamanho}mb)' for processo in processos_bloqueados]}")
 
                 for processo_bloq in processos_bloqueados:
                     # Verificar se o processo bloqueado está dentro de certas condições que tornam eficiente para o sistema desalocá-lo
@@ -136,7 +136,8 @@ while executando_escalonador:
             console.print(f"Processo {processo.identificador} foi adicionado na fila de prontos 0")
         else: # Verifica se há processo bloqueado que pode ser desalocado para dar espaço ao processo novo
             fila_total_bloqueados = fila_de_bloqueados + bloqueados_em_execucao
-            console.print(f"DEBUG: fila_total_bloqueados: ", [f'Processo {processo.identificador} ({processo.indice_inicial_mp} - {processo.indice_final_mp})' for processo in fila_total_bloqueados])
+            # console.print(f"DEBUG: fila_total_bloqueados: ", [f'Processo {processo.identificador} ({processo.indice_inicial_mp} - {processo.indice_final_mp})' for processo in fila_total_bloqueados])
+            console.print("Verificando se é possível suspender um processo bloqueado")
             for processo_bloqueado in fila_total_bloqueados:
                 if ((processo_bloqueado.suspenso_bloqueado or processo_bloqueado.suspenso_pronto)):
                     continue

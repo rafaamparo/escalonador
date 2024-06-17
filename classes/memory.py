@@ -99,7 +99,7 @@ class Memory():
                 self.console.print(f"Processo {processo.identificador} foi alocado na Memória Principal no intervalo [{inicio_intervalo}, {fim_intervalo}]")
                 return True
         if printarLogs:
-            self.console.print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento")
+            self.console.print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento (Processo precisa de {processo.tamanho}mb)")
         #processo.suspender()
         return False
     
