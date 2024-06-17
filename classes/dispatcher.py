@@ -11,7 +11,6 @@ class Dispatcher():
         self.fila_temp_prontos = []
         self.memoria = memoria
 
-
         for fila in self.filas:
             self.fila_temp_prontos.append([])
 

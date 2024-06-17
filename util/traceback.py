@@ -5,7 +5,15 @@ from rich.table import Table
 class Traceback():
     def __init__(self, fila_de_processos):
         self.dadosDoEscalonamento = []
+        self.finalizacaoProcessos = []
         self.fila_de_processos = fila_de_processos
+
+
+    def adicionar_finalizacao(self, processo, tempo):
+        self.finalizacaoProcessos.append({
+            "processo": processo.identificador,
+            "tempo": tempo
+        })
 
     def print_tabela(self):
         table = Table(title="Escalonador de Processos", show_lines=True, style="yellow")
@@ -49,11 +57,18 @@ class Traceback():
         table.add_column("Tempo Normalizado", justify="center", style="red", no_wrap=True)
 
         for processo in info_processos:
-            turnaround = (info_processos[processo]["last"] - info_processos[processo]["chegada"])
+            lastExecution = None
+            for finalizacao in self.finalizacaoProcessos:
+                if finalizacao["processo"] == processo:
+                    lastExecution = finalizacao["tempo"]
+                    break
+
+
+            turnaround = (lastExecution - info_processos[processo]["chegada"])
             tempo_normalizado = turnaround / info_processos[processo]["tservico"]
             table.add_row(f"P{processo}", 
                           f"{info_processos[processo]['chegada']}", 
-                          f"{info_processos[processo]['last']}", 
+                          f"{lastExecution}", 
                           f"{info_processos[processo]['tservico']}", 
                           f"{'%.0f' % turnaround}", 
                           f"{'%.2f' % tempo_normalizado}"

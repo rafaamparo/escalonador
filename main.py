@@ -36,6 +36,10 @@ caminho_arquivo = r'\entrada.txt'
 leitor = LeitorArquivo(caminho_arquivo, quantum, capacidade_total_mb, id_inicial_de_processos)
 processos = leitor.carregar_processos()
 memoria = Memory(capacidade_total_mb=capacidade_total_mb, processos=processos, tamanho_barra=100)
+
+fila_de_processos = processos
+traceback = Traceback(fila_de_processos=fila_de_processos) # * Para gerar tabela de escalonamento ao fim da execução
+
 dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados, memoria)
 
 for i in range(numero_de_cpus):
@@ -44,9 +48,6 @@ for i in range(numero_de_cpus):
 for i in range(numero_de_discos):
     lista_de_discos.append(Disk(i, dispatcher=dispatcher))
     
-fila_de_processos = processos
-
-traceback = Traceback(fila_de_processos=fila_de_processos) # * Para gerar tabela de escalonamento ao fim da execução
 
 # * Nosso escalonador de processos
 executando_escalonador = True
@@ -55,7 +56,7 @@ while executando_escalonador:
     console.print("")
     console.rule(f"Tempo {unidade_de_tempo}")
 
-    
+    # * Despachar processos para as filas corretas fazendo o desempate
     dispatcher.despachar_bloqueados()
     dispatcher.despachar_prontos()
 
@@ -74,6 +75,10 @@ while executando_escalonador:
     for disco in lista_de_discos:
         disco.remanescente()
     console.print(" ")
+
+    # * Despachar processos finalizados
+    for processo_finalizado in dispatcher.fila_temp_finalizados:
+        traceback.adicionar_finalizacao(processo_finalizado, unidade_de_tempo)
     dispatcher.despachar_finalizados()
 
     # * Chegada de processos

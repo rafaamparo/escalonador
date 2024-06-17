@@ -53,7 +53,6 @@ class Memory():
 
                 for processo in self.processos:
                     if processo.indice_inicial_mp is not None:
-                        # print(processo.indice_inicial_mp, processo.indice_final_mp, start_index, end_index)
                         if start_index >= processo.indice_inicial_mp and end_index <= processo.indice_final_mp:
                             memory_text.append('█', style=f'color({getColorIndex(processo.identificador) })')
                             break
@@ -100,7 +99,6 @@ class Memory():
                 return True
         if printarLogs:
             self.console.print(f"Processo {processo.identificador} não pode ser alocado na memória nesse momento (Processo precisa de {processo.tamanho}mb)")
-        #processo.suspender()
         return False
     
     def remover_processo(self, processo: Process):
