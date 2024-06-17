@@ -72,7 +72,7 @@ class Memory():
             Group(
                 Panel(memory_text), 
                 Panel(
-                    Text(" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres]), justify="center", style="white"), title="[white]Intervalos Livres"
+                    Text(" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres]), justify="center", style="bright_green"), title="[white]Intervalos Livres"
                     ),
                 Panel(text_espaco_alocado_processos, title="[white]Espaço Alocado por Processos", style="yellow")
                 ),

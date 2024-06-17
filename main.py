@@ -14,7 +14,7 @@ from rich.panel import Panel
 # * Variáveis de configuração
 
 unidade_de_tempo = 0
-clock_delay = 0.5
+clock_delay = 0
 quantum = 2
 numero_de_cpus = 1
 numero_de_discos = 4
@@ -251,3 +251,4 @@ console.rule("Fim da execução")
 console.print(" ")
 
 traceback.print_tabela()
+traceback.print_tnormalizado()
