@@ -20,6 +20,7 @@ class Traceback():
         
         console = Console()
         console.print(table, justify="center")
+        console.print("")
 
     def print_tnormalizado(self):
         console = Console()
@@ -54,6 +55,12 @@ class Traceback():
         for processo in info_processos:
             turnaround = (info_processos[processo]["last"] - info_processos[processo]["chegada"])
             tempo_normalizado = turnaround / info_processos[processo]["tservico"]
-            table.add_row(f"P{processo}", f"{info_processos[processo]["chegada"]}", f"{info_processos[processo]["last"]}", f"{info_processos[processo]["tservico"]}", f"{'%.2f' % turnaround}", f"{'%.2f' % tempo_normalizado}")
+            table.add_row(f"P{processo}", 
+                          f"{info_processos[processo]['chegada']}", 
+                          f"{info_processos[processo]['last']}", 
+                          f"{info_processos[processo]['tservico']}", 
+                          f"{'%.0f' % turnaround}", 
+                          f"{'%.2f' % tempo_normalizado}"
+                          )
 
         console.print(table, justify="center")
