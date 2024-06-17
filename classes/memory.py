@@ -10,13 +10,15 @@ from rich.panel import Panel
 from rich.console import Group
 
 class Memory():
-    def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000):
+    def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000, processos = [], tamanho_barra=200):
         # ! Vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
         self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
         # self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 950
         self.intervalos_livres = []
         self.atualiza_intervalos_livres()
         self.console = Console()
+        self.tamanho_barra = tamanho_barra
+        self.processos = processos
 
 
 
@@ -24,10 +26,19 @@ class Memory():
     def printIntervalosLivres(self):
         self.atualiza_intervalos_livres()
         
+        def getColorIndex(id):
+            color_index = id + 1
+            if color_index > 8:
+                color_index = color_index % 8
 
+            if color_index == 3:
+                color_index = 125
+            if color_index == 2:
+                color_index = 172
+            return color_index                    
 
         memory_text = Text()
-        tamanho = 200
+        tamanho = self.tamanho_barra
         segment_size = len(self.memoria_principal) // tamanho  # Tamanho de cada segmento
 
         for i in range(tamanho):
@@ -39,11 +50,25 @@ class Memory():
             free_count = segment_size - occupied_count
 
             if occupied_count > free_count:
-                memory_text.append('█', style='bright_red')
+
+                for processo in self.processos:
+                    if processo.indice_inicial_mp is not None:
+                        # print(processo.indice_inicial_mp, processo.indice_final_mp, start_index, end_index)
+                        if start_index >= processo.indice_inicial_mp and end_index <= processo.indice_final_mp:
+                            memory_text.append('█', style=f'color({getColorIndex(processo.identificador) })')
+                            break
+                # memory_text.append('█', style='bright_red')
             else:
                 memory_text.append('█', style='bright_green')
 
-        self.console.print(Panel(Group(Panel(memory_text), Panel(Text(f"{" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres])}", justify="center", style="white"), title="[white]Intervalos Livres")), title="[white]Memória Principal", style="yellow"))
+
+        text_espaco_alocado_processos = Text.assemble(
+                *[
+                    (f"Processo {processo.identificador}: [{processo.indice_inicial_mp}, {processo.indice_final_mp-1}] ({processo.indice_final_mp - processo.indice_inicial_mp}mb) ", f"bold color({getColorIndex(processo.identificador)})")
+                    for processo in self.processos
+                    if processo.indice_inicial_mp is not None
+                ], justify="center")
+        self.console.print(Panel(Group(Panel(memory_text), Panel(Text(f"{" | ".join([f'[{intervalo[0]}, {intervalo[1]}] ({intervalo[1] - intervalo[0]+1}mb)' for intervalo in self.intervalos_livres])}", justify="center", style="white"), title="[white]Intervalos Livres")), title="[white]Memória Principal", style="yellow"), Panel(text_espaco_alocado_processos, title="[white]Espaço Alocado por Processos", style="yellow"))
 
 
     def admite_processo(self, processo: Process, printarLogs=True):

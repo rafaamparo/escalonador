@@ -33,13 +33,14 @@ fila_de_suspensos = []
 
 filas = [[] for i in range(numero_de_filas)]
 
-memoria = Memory(capacidade_total_mb=capacidade_total_mb)
-
-dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados, memoria)
 
 caminho_arquivo = r'\entrada.txt'
 leitor = LeitorArquivo(caminho_arquivo, quantum, id_inicial_de_processos)
 processos = leitor.carregar_processos()
+
+memoria = Memory(capacidade_total_mb=capacidade_total_mb, processos=processos, tamanho_barra=100)
+
+dispatcher = Dispatcher(filas, fila_de_bloqueados, bloqueados_em_execucao, fila_de_finalizados, memoria)
 
 for i in range(numero_de_cpus):
     lista_de_cpus.append(Cpu(i, len(filas), dispatcher=dispatcher))
