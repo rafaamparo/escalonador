@@ -13,7 +13,6 @@ class Memory():
     def __init__(self, capacidade_celula_mb = 1, capacidade_total_mb = 32000, processos = [], tamanho_barra=200):
         # ! Vetor que representa a memória principal. célula False representa endereços de memória que não estão ocupados por processo
         self.memoria_principal = [False for _ in range(int(capacidade_total_mb/capacidade_celula_mb))]
-        # self.memoria_principal = [False] * 798 + [True] + [False] * 799 + [True] + [False] * 950
         self.intervalos_livres = []
         self.atualiza_intervalos_livres()
         self.console = Console()
@@ -56,7 +55,6 @@ class Memory():
                         if start_index >= processo.indice_inicial_mp and end_index <= processo.indice_final_mp:
                             memory_text.append('█', style=f'color({getColorIndex(processo.identificador) })')
                             break
-                # memory_text.append('█', style='bright_red')
             else:
                 memory_text.append('█', style='bright_green')
 

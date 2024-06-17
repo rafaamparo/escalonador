@@ -13,6 +13,7 @@ from rich.panel import Panel
 
 # * Variáveis de configuração
 
+caminho_arquivo = r'\entrada.txt'
 unidade_de_tempo = 0
 clock_delay = 0.5
 quantum = 3
@@ -32,7 +33,6 @@ bloqueados_em_execucao = []
 fila_de_suspensos = []
 
 filas = [[] for i in range(numero_de_filas)]
-caminho_arquivo = r'\entrada.txt'
 leitor = LeitorArquivo(caminho_arquivo, quantum, capacidade_total_mb, id_inicial_de_processos)
 processos = leitor.carregar_processos()
 memoria = Memory(capacidade_total_mb=capacidade_total_mb, processos=processos, tamanho_barra=100)
