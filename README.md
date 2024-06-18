@@ -49,7 +49,7 @@
   </tr>
 </table>
 
-Para executar o nosso simulador de escalonamento de processos, primeiro digite o comando `pip install -r requirements.txt` no seu terminal para conseguir visualizar as tabelas de escalonamento e informações durante a execução!
+Para executar o nosso simulador de escalonamento de processos, primeiro digite o comando `pip install -r requirements.txt` no seu terminal para conseguir visualizar as tabelas de escalonamento e informações durante a execução! Depois, digite  `python .\main.py` para executar o programa no seu terminal.
 
 São fornecidos três arquivos de entrada, para cobrir os mais diversos tipos de situações que podem ocorrer na rotina do escalonador. Para trocar o arquivo, acesse, na `main.py`, a variável `caminho_arquivo` nas inicializações do programa (linha 16) para um dos seguintes arquivos: `entrada.txt` (arquivo padrão), `entrada_1.txt`, `entrada_2.txt` ou `entrada_3.txt`.
 
