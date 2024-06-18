@@ -76,6 +76,7 @@ O projeto segue o padrão de Programação Orientada a Objetos, com a definiçã
 - `Dispatcher` (para organização dos processos em suas respectivas filas)
 - `Memory` (para gerenciamento da simulação de memória)
 - `Traceback` (para configuração da interface gráfica)
+- `Calculadora` (para cálculo de tempo normalizado)
 
 As configurações de simulação são altamente customizáveis: na inicialização, para testar outros cenários, pode-se alterar o número de CPUs, número de discos, tamanho da memória, quantidade de filas de prontos, arquivo de entrada, etc. Por exemplo, se configurar os valores de:
 
