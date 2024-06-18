@@ -51,7 +51,7 @@
 
 Para executar o nosso simulador de escalonamento de processos, primeiro digite o comando `pip install -r requirements.txt` no seu terminal para conseguir visualizar as tabelas de escalonamento e informações durante a execução!
 
-São fornecidos três arquivos de entrada, para cobrir os mais diversos tipos de situações que podem ocorrer na rotina do escalonador. Para trocar o arquivo, acesse, na `main.py`, a variável `caminho_arquivo` nas inicializações do programa (linha 16) para um dos seguintes arquivos: `entrada.txt` (arquivo padrão), `entrada_alternativa.txt` ou `entrada_alternativa_2.txt`.
+São fornecidos três arquivos de entrada, para cobrir os mais diversos tipos de situações que podem ocorrer na rotina do escalonador. Para trocar o arquivo, acesse, na `main.py`, a variável `caminho_arquivo` nas inicializações do programa (linha 16) para um dos seguintes arquivos: `entrada.txt` (arquivo padrão), `entrada_1.txt`, `entrada_2.txt` ou `entrada_3.txt`.
 
 O escalonador simulado é implementado de acordo com uma política preemptiva feedback, com quantum de 3 unidades de clock e 4 filas de prontos - filas 0, 1, 2 e 3. A máquina simulada dispõe de 4 CPUs, 4 discos, para operações de acesso à memória, e 32GB de memória principal, assegurando que cada recurso solicitado está apenas disponível para o processo requisitante durante toda a sua execução.
 
