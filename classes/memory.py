@@ -27,13 +27,15 @@ class Memory():
         
         def getColorIndex(id):
             color_index = id + 1
-            if color_index > 8:
-                color_index = color_index % 8
+            if color_index > 10:
+                color_index = color_index % 10
 
             if color_index == 3:
                 color_index = 125
             if color_index == 2:
                 color_index = 172
+            if color_index == 10:
+                color_index = 168
             return color_index                    
 
         memory_text = Text(justify="center")
