@@ -31,7 +31,7 @@ fila_de_bloqueados = []
 fila_de_finalizados = []
 bloqueados_em_execucao = []
 fila_de_suspensos = []
-
+lista_finalizados = []
 filas = [[] for i in range(numero_de_filas)]
 leitor = LeitorArquivo(caminho_arquivo, quantum, capacidade_total_mb, id_inicial_de_processos)
 processos = leitor.carregar_processos()
