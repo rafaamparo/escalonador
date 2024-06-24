@@ -24,7 +24,7 @@
     </td>
     <td align="center">
       <a href="#">
-        <img src="https://media.licdn.com/dms/image/D4D03AQF77uFsTywZOQ/profile-displayphoto-shrink_800_800/0/1695431131430?e=1724284800&v=beta&t=9kjcl93dCehq9VGKYAJDS6WNPxg2PNHBq1k64L8ULAw" width="100px;" alt="Foto de Perfil Rafael Amparo"/><br>
+        <img src="https://media.licdn.com/dms/image/D4D03AQGXiSR5993OyA/profile-displayphoto-shrink_800_800/0/1719102039712?e=1724889600&v=beta&t=0fElI4Y-sor2GsPjUjf3bL8_HmTzz-ft1UWYs4Fc53g" width="100px;" alt="Foto de Perfil Rafael Amparo"/><br>
         <sub>
           <b>Rafael Amparo</b>
         </sub>
