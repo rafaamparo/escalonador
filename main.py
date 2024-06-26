@@ -14,6 +14,7 @@ from rich.panel import Panel
 # * Variáveis de configuração
 
 caminho_arquivo = r'\entrada.txt'
+show_by_time = True
 unidade_de_tempo = 0
 clock_delay = 0.5
 quantum = 3
@@ -234,7 +235,11 @@ while executando_escalonador:
     
     traceback.dadosDoEscalonamento.append(dadoDoEscalonamentoAtual)
     unidade_de_tempo += 1
-    time.sleep(clock_delay)
+
+    if show_by_time:
+        input("Pressione Enter para continuar")
+    else:
+        time.sleep(clock_delay)
 
     # * Condição de parada
     if (len(fila_de_finalizados) == len(fila_de_processos)) and all(cpu.logRemanescente is None for cpu in lista_de_cpus):
