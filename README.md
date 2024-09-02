@@ -4,50 +4,11 @@
 
 ### Equipe:
 
-<table>
-  <tr>
-    <td align="center">
-      <a href="#">
-        <img src="https://media.licdn.com/dms/image/D4D03AQEpKXL2hfWX_w/profile-displayphoto-shrink_800_800/0/1694720169840?e=1720051200&v=beta&t=1hXPRJ2VDCtSkZWCIGdyN-scDbceuA6oQpLurCELA4Q" width="100px;" alt="Foto de Perfil João Marinho"/><br>
-        <sub>
-          <b>João Marinho</b>
-        </sub>
-      </a>
-    </td>
-  <td align="center"> 
-      <a href="#">
-        <img src="./assets/mauricio.png" width="100px;" alt="Foto de Perfil Maurício Pollis"/><br>
-        <sub>
-          <b>Maurício Pollis</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <img src="https://media.licdn.com/dms/image/D4D03AQGXiSR5993OyA/profile-displayphoto-shrink_800_800/0/1719102039712?e=1724889600&v=beta&t=0fElI4Y-sor2GsPjUjf3bL8_HmTzz-ft1UWYs4Fc53g" width="100px;" alt="Foto de Perfil Rafael Amparo"/><br>
-        <sub>
-          <b>Rafael Amparo</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <img src="https://media.licdn.com/dms/image/D4D03AQEHMV-n99jMgg/profile-displayphoto-shrink_800_800/0/1671372613905?e=1724284800&v=beta&t=d9PZLvKf-49t-gAIBjVy33BZrkUDfKApGNgn8lwTAds" width="100px;" alt="Foto de Perfil Thales Abranches"/><br>
-        <sub>
-          <b>Thales Abranches</b>
-        </sub>
-      </a>
-    </td>
-        <td align="center">
-      <a href="#">
-        <img src="https://media.licdn.com/dms/image/C4D03AQFUP51eZGzXVA/profile-displayphoto-shrink_800_800/0/1660179721701?e=1724284800&v=beta&t=mukl6EggU3MPNSlDJcMz7z0XT8xpdyfCAZThfP36j48" width="100px;" alt="Foto de Perfil Vinícius Mouzinho"/><br>
-        <sub>
-          <b>Vinícius Mouzinho</b>
-        </sub>
-      </a>
-    </td>
-  </tr>
-</table>
+João Marinho
+Maurício Pollis
+Rafael Amparo
+Thales Abranches
+Vinícius Mouzinho
 
 Para executar o nosso simulador de escalonamento de processos, primeiro digite o comando `pip install -r requirements.txt` no seu terminal para conseguir visualizar as tabelas de escalonamento e informações durante a execução! Depois, digite  `python .\main.py` para executar o programa no seu terminal.
 
