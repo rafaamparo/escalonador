@@ -3,11 +3,7 @@
 # Escalonador de Processos
 
 ## Equipe: 
-### João Marinho; 
-### Maurício Pollis;
-### Rafael Amparo;
-### Thales Abranches;
-### Vinícius Mouzinho.
+### João Marinho, Maurício Pollis, Rafael Amparo, Thales Abranches e Vinícius Mouzinho.
 
 Para executar o nosso simulador de escalonamento de processos, primeiro digite o comando `pip install -r requirements.txt` no seu terminal para conseguir visualizar as tabelas de escalonamento e informações durante a execução! Depois, digite  `python .\main.py` para executar o programa no seu terminal.
 
